@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Outer Rounded Square Border -->
+  <rect x="6" y="6" width="88" height="88" rx="22" stroke="#97E600" stroke-width="6.5" />
+  <!-- Middle Rounded Square Border -->
+  <rect x="24" y="24" width="52" height="52" rx="15" stroke="#97E600" stroke-width="5.5" />
+  <!-- Inner Solid Green Filled Block -->
+  <rect x="46" y="34" width="24" height="24" rx="7" fill="#97E600" />
+</svg>
