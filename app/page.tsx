@@ -42,7 +42,7 @@ export default function Home() {
               Powered by Arc
             </a>
             <a
-              href="https://github.com"
+              href="https://github.com/harnessmoneyhq"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-neutral-300 transition-colors"
