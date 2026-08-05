@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-neutral-900">
+    <header className="sticky top-0 z-50 bg-black">
       <div className="flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <div className="flex items-center gap-2">
           {/* Harness Logo */}
