@@ -29,6 +29,12 @@ export function Navbar() {
         {/* Nav Links */}
         <nav className="flex items-center gap-6 text-sm font-sans">
           <Link
+            href="/"
+            className="text-neutral-400 hover:text-white transition-colors"
+          >
+            Home
+          </Link>
+          <Link
             href="/sellers"
             className="text-neutral-400 hover:text-white transition-colors"
           >
