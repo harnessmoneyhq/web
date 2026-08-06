@@ -2,7 +2,16 @@
 
 import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ASSETS_DATA, AssetItem, AssetCategory } from "@/lib/assets-data";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
 
 type SortField = "name" | "model" | "price" | "downloads" | null;
 type SortDirection = "asc" | "desc";
@@ -55,6 +64,7 @@ function getPageNumbers(current: number, total: number): (number | "...")[] {
 }
 
 export function AssetsLeaderboard() {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<AssetCategory | null>(null);
   const [activeTab, setActiveTab] = useState<"all" | "featured" | "trending" | "hot" | "free" | "new">("all");
@@ -318,145 +328,154 @@ export function AssetsLeaderboard() {
         </button>
       </div>
 
-      {/* Table Header with Interactive Column Sorting */}
-      <div className="hidden lg:grid grid-cols-12 gap-4 border-b border-neutral-800/80 py-3 text-xs font-mono font-medium uppercase text-neutral-500">
-        <div className="col-span-1 text-neutral-500">#</div>
+      {/* Table Component */}
+      <Table>
+        <TableHeader className="border-b border-neutral-800/80">
+          <TableRow className="border-b border-neutral-800/80 hover:bg-transparent">
+            <TableHead className="w-12 text-neutral-500 font-mono font-medium text-xs uppercase px-3 py-3">
+              #
+            </TableHead>
+            <TableHead className="font-mono font-medium text-xs uppercase text-neutral-500 px-3 py-3">
+              <button
+                type="button"
+                onClick={() => handleSort("name")}
+                className="flex items-center hover:text-white transition-colors group/btn"
+              >
+                Asset {renderSortIndicator("name")}
+              </button>
+            </TableHead>
+            <TableHead className="font-mono font-medium text-xs uppercase text-neutral-500 px-3 py-3 hidden lg:table-cell">
+              <button
+                type="button"
+                onClick={() => handleSort("model")}
+                className="flex items-center hover:text-white transition-colors group/btn"
+              >
+                Model {renderSortIndicator("model")}
+              </button>
+            </TableHead>
+            <TableHead className="font-mono font-medium text-xs uppercase text-neutral-500 px-3 py-3 text-right hidden lg:table-cell">
+              <button
+                type="button"
+                onClick={() => handleSort("price")}
+                className="flex items-center justify-end w-full hover:text-white transition-colors group/btn"
+              >
+                Price {renderSortIndicator("price")}
+              </button>
+            </TableHead>
+            <TableHead className="font-mono font-medium text-xs uppercase text-neutral-500 px-3 py-3 text-right hidden lg:table-cell">
+              <span className="cursor-default">30D Activity</span>
+            </TableHead>
+            <TableHead className="font-mono font-medium text-xs uppercase text-neutral-500 px-3 py-3 text-right">
+              <button
+                type="button"
+                onClick={() => handleSort("downloads")}
+                className="flex items-center justify-end w-full hover:text-white transition-colors group/btn"
+              >
+                Downloads {renderSortIndicator("downloads")}
+              </button>
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody className="divide-y divide-neutral-900">
+          {processedAssets.length === 0 ? (
+            <TableRow className="hover:bg-transparent border-b-0">
+              <TableCell colSpan={6} className="py-12 text-center text-neutral-500 font-mono text-sm">
+                No assets matching &quot;{search}&quot;
+              </TableCell>
+            </TableRow>
+          ) : (
+            paginatedAssets.map((asset, index) => (
+              <TableRow
+                key={asset.id}
+                onClick={() => router.push(`/assets/${asset.id}`)}
+                className="border-b border-neutral-900 hover:bg-neutral-900/60 transition-colors group cursor-pointer"
+              >
+                {/* Sequential Rank Index (1, 2, 3...) */}
+                <TableCell className="font-mono text-sm text-neutral-500 px-3 py-3">
+                  {(currentPage - 1) * pageSize + index + 1}
+                </TableCell>
 
-        <div className="col-span-4">
-          <button
-            type="button"
-            onClick={() => handleSort("name")}
-            className="flex items-center hover:text-white transition-colors group/btn"
-          >
-            Asset {renderSortIndicator("name")}
-          </button>
-        </div>
+                {/* Asset Info */}
+                <TableCell className="px-3 py-3 min-w-0">
+                  <div className="flex flex-col justify-center">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <Link
+                        href={`/assets/${asset.id}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="font-semibold text-white group-hover:text-[#97E600] transition-colors text-sm sm:text-base truncate"
+                      >
+                        {asset.name}
+                      </Link>
+                      {asset.official && (
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="h-4 w-4 text-[#97E600] flex-shrink-0"
+                          fill="currentColor"
+                        >
+                          <title>Official Asset</title>
+                          <path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69l-3.61.81.34 3.69L1 12l2.44 2.79-.34 3.7 3.61.82 1.89 3.2 3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z" />
+                        </svg>
+                      )}
+                    </div>
+                    <span className="text-xs text-neutral-400 font-mono capitalize truncate">
+                      {asset.category}
+                    </span>
+                    {/* Mobile-only tags for Model & Price */}
+                    <div className="flex lg:hidden items-center gap-2 mt-1">
+                      <span className="text-[10px] font-mono text-neutral-400 bg-neutral-900 border border-neutral-800 px-1.5 py-0.5 rounded">
+                        {asset.model}
+                      </span>
+                      <span className="text-[10px] font-mono text-[#97E600] bg-[#97E600]/10 border border-[#97E600]/30 px-1.5 py-0.5 rounded-full font-medium">
+                        {asset.price}
+                      </span>
+                    </div>
+                  </div>
+                </TableCell>
 
-        <div className="col-span-2">
-          <button
-            type="button"
-            onClick={() => handleSort("model")}
-            className="flex items-center hover:text-white transition-colors group/btn"
-          >
-            Model {renderSortIndicator("model")}
-          </button>
-        </div>
-
-        <div className="col-span-2 text-right">
-          <button
-            type="button"
-            onClick={() => handleSort("price")}
-            className="flex items-center justify-end w-full hover:text-white transition-colors group/btn"
-          >
-            Price {renderSortIndicator("price")}
-          </button>
-        </div>
-
-        <div className="col-span-2 text-right">
-          <span className="cursor-default">30D Activity</span>
-        </div>
-
-        <div className="col-span-1 text-right">
-          <button
-            type="button"
-            onClick={() => handleSort("downloads")}
-            className="flex items-center justify-end w-full hover:text-white transition-colors group/btn"
-          >
-            Downloads {renderSortIndicator("downloads")}
-          </button>
-        </div>
-      </div>
-
-      {/* Table Items */}
-      <div>
-        {processedAssets.length === 0 ? (
-          <div className="py-12 text-center text-neutral-500 font-mono text-sm">
-            No assets matching &quot;{search}&quot;
-          </div>
-        ) : (
-          paginatedAssets.map((asset, index) => (
-            <Link
-              key={asset.id}
-              href={`/assets/${asset.id}`}
-              className="grid grid-cols-[auto_1fr_auto] lg:grid-cols-12 items-center gap-3 lg:gap-4 py-3 border-b border-neutral-900 hover:bg-neutral-900/60 transition-colors group cursor-pointer text-left"
-            >
-              {/* Sequential Rank Index (1, 2, 3...) */}
-              <div className="lg:col-span-1 text-sm text-neutral-500 font-mono">
-                {(currentPage - 1) * pageSize + index + 1}
-              </div>
-
-              {/* Asset Info */}
-              <div className="lg:col-span-4 min-w-0 flex flex-col justify-center">
-                <div className="flex items-center gap-1.5 min-w-0">
-                  <h3 className="font-semibold text-white group-hover:text-[#97E600] transition-colors text-sm sm:text-base truncate">
-                    {asset.name}
-                  </h3>
-                  {asset.official && (
-                    <svg
-                      viewBox="0 0 24 24"
-                      className="h-4 w-4 text-[#97E600] flex-shrink-0"
-                      fill="currentColor"
-                    >
-                      <title>Official Asset</title>
-                      <path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69l-3.61.81.34 3.69L1 12l2.44 2.79-.34 3.7 3.61.82 1.89 3.2 3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z" />
-                    </svg>
-                  )}
-                </div>
-                <span className="text-xs text-neutral-400 font-mono capitalize truncate">
-                  {asset.category}
-                </span>
-                {/* Mobile-only tags for Model & Price */}
-                <div className="flex lg:hidden items-center gap-2 mt-1">
-                  <span className="text-[10px] font-mono text-neutral-400 bg-neutral-900 border border-neutral-800 px-1.5 py-0.5 rounded">
+                {/* Model (Desktop) */}
+                <TableCell className="hidden lg:table-cell px-3 py-3">
+                  <span className="text-xs font-mono text-neutral-300 bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded">
                     {asset.model}
                   </span>
-                  <span className="text-[10px] font-mono text-[#97E600] bg-[#97E600]/10 border border-[#97E600]/30 px-1.5 py-0.5 rounded-full font-medium">
+                </TableCell>
+
+                {/* Price (Desktop) */}
+                <TableCell className="hidden lg:table-cell px-3 py-3 text-right">
+                  <span className="text-xs font-mono font-medium text-[#97E600] bg-[#97E600]/10 border border-[#97E600]/30 px-2 py-0.5 rounded-full">
                     {asset.price}
                   </span>
-                </div>
-              </div>
+                </TableCell>
 
-              {/* Model (Desktop) */}
-              <div className="hidden lg:flex lg:col-span-2 items-center">
-                <span className="text-xs font-mono text-neutral-300 bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded">
-                  {asset.model}
-                </span>
-              </div>
+                {/* Sparkline Graphic (Desktop) */}
+                <TableCell className="hidden lg:table-cell px-3 py-3 text-right">
+                  <div className="flex justify-end">
+                    <svg
+                      viewBox="0 0 96 24"
+                      className="h-6 w-24 text-neutral-600 group-hover:text-[#97E600] transition-colors"
+                    >
+                      <path
+                        d={`M ${asset.sparkline
+                          .map((val, idx) => `${idx * 13.7 + 2},${24 - (val / 50) * 20}`)
+                          .join(" L ")}`}
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </TableCell>
 
-              {/* Price (Desktop) */}
-              <div className="hidden lg:flex lg:col-span-2 items-center justify-end">
-                <span className="text-xs font-mono font-medium text-[#97E600] bg-[#97E600]/10 border border-[#97E600]/30 px-2 py-0.5 rounded-full">
-                  {asset.price}
-                </span>
-              </div>
-
-              {/* Sparkline Graphic (Desktop) */}
-              <div className="hidden lg:flex lg:col-span-2 items-center justify-end">
-                <svg
-                  viewBox="0 0 96 24"
-                  className="h-6 w-24 text-neutral-600 group-hover:text-[#97E600] transition-colors"
-                >
-                  <path
-                    d={`M ${asset.sparkline
-                      .map((val, idx) => `${idx * 13.7 + 2},${24 - (val / 50) * 20}`)
-                      .join(" L ")}`}
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-
-              {/* Downloads */}
-              <div className="lg:col-span-1 text-right font-mono text-sm text-white font-medium">
-                {asset.downloads}
-              </div>
-            </Link>
-          ))
-        )}
-      </div>
+                {/* Downloads */}
+                <TableCell className="px-3 py-3 text-right font-mono text-sm text-white font-medium">
+                  {asset.downloads}
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
 
       {/* Pagination Controls */}
       {processedAssets.length > 0 && (
