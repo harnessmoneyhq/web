@@ -244,88 +244,98 @@ export function AssetsLeaderboard() {
       </div>
 
       {/* Category Filter Pills */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-4 scrollbar-none scroll-smooth">
-        {FILTER_PILLS.map((pill) => {
-          const isActive = selectedCategory === pill.value;
-          return (
-            <button
-              key={pill.label}
-              type="button"
-              onClick={() => setSelectedCategory(isActive && pill.value !== null ? null : pill.value)}
-              className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium whitespace-nowrap transition-all duration-200 border cursor-pointer ${
-                isActive
-                  ? "bg-[#97E600]/15 text-[#97E600] border-[#97E600]/50 shadow-[0_0_12px_rgba(151,230,0,0.15)]"
-                  : "bg-neutral-900/80 text-neutral-400 border-neutral-800 hover:text-white hover:border-neutral-700 hover:bg-neutral-800/60"
-              }`}
-            >
-              {pill.label}
-            </button>
-          );
-        })}
+      <div className="mb-5">
+        <span className="text-[11px] font-mono font-medium tracking-wider text-neutral-400 uppercase block mb-2">
+          Asset Type
+        </span>
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none scroll-smooth">
+          {FILTER_PILLS.map((pill) => {
+            const isActive = selectedCategory === pill.value;
+            return (
+              <button
+                key={pill.label}
+                type="button"
+                onClick={() => setSelectedCategory(isActive && pill.value !== null ? null : pill.value)}
+                className={`px-3.5 py-2 rounded-full text-xs font-mono font-medium whitespace-nowrap transition-all duration-200 border cursor-pointer ${
+                  isActive
+                    ? "bg-[#97E600]/15 text-[#97E600] border-[#97E600]/60 shadow-[0_0_12px_rgba(151,230,0,0.15)]"
+                    : "bg-neutral-900/80 text-neutral-300 border-neutral-700 hover:text-white hover:border-neutral-600 hover:bg-neutral-800/60"
+                }`}
+              >
+                {pill.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex gap-6 mb-4 font-mono text-sm border-b border-neutral-900 pb-2">
-        <button
-          type="button"
-          onClick={() => setActiveTab("all")}
-          className={`pb-2 transition-colors ${activeTab === "all"
-            ? "border-b-2 border-white text-white font-medium"
-            : "text-neutral-500 hover:text-neutral-300"
-            }`}
-        >
-          All Time
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab("featured")}
-          className={`pb-2 transition-colors ${activeTab === "featured"
-            ? "border-b-2 border-white text-white font-medium"
-            : "text-neutral-500 hover:text-neutral-300"
-            }`}
-        >
-          Featured
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab("trending")}
-          className={`pb-2 transition-colors ${activeTab === "trending"
-            ? "border-b-2 border-white text-white font-medium"
-            : "text-neutral-500 hover:text-neutral-300"
-            }`}
-        >
-          Trending (24h)
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab("hot")}
-          className={`pb-2 transition-colors ${activeTab === "hot"
-            ? "border-b-2 border-white text-white font-medium"
-            : "text-neutral-500 hover:text-neutral-300"
-            }`}
-        >
-          Top Movers (1h)
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab("new")}
-          className={`pb-2 transition-colors ${activeTab === "new"
-            ? "border-b-2 border-white text-white font-medium"
-            : "text-neutral-500 hover:text-neutral-300"
-            }`}
-        >
-          New
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab("free")}
-          className={`pb-2 transition-colors ${activeTab === "free"
-            ? "border-b-2 border-white text-white font-medium"
-            : "text-neutral-500 hover:text-neutral-300"
-            }`}
-        >
-          Free
-        </button>
+      <div className="mb-4">
+        <span className="text-[11px] font-mono font-medium tracking-wider text-neutral-400 uppercase block mb-2">
+          Ranking
+        </span>
+        <div className="flex gap-6 overflow-x-auto font-mono text-sm border-b border-neutral-900 pb-2 scrollbar-none">
+          <button
+            type="button"
+            onClick={() => setActiveTab("all")}
+            className={`pb-2 transition-colors whitespace-nowrap ${activeTab === "all"
+              ? "border-b-2 border-white text-white font-medium"
+              : "text-neutral-500 hover:text-neutral-300"
+              }`}
+          >
+            All Time
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("featured")}
+            className={`pb-2 transition-colors whitespace-nowrap ${activeTab === "featured"
+              ? "border-b-2 border-white text-white font-medium"
+              : "text-neutral-500 hover:text-neutral-300"
+              }`}
+          >
+            Featured
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("trending")}
+            className={`pb-2 transition-colors whitespace-nowrap ${activeTab === "trending"
+              ? "border-b-2 border-white text-white font-medium"
+              : "text-neutral-500 hover:text-neutral-300"
+              }`}
+          >
+            Trending (24h)
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("hot")}
+            className={`pb-2 transition-colors whitespace-nowrap ${activeTab === "hot"
+              ? "border-b-2 border-white text-white font-medium"
+              : "text-neutral-500 hover:text-neutral-300"
+              }`}
+          >
+            Top Movers (1h)
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("new")}
+            className={`pb-2 transition-colors whitespace-nowrap ${activeTab === "new"
+              ? "border-b-2 border-white text-white font-medium"
+              : "text-neutral-500 hover:text-neutral-300"
+              }`}
+          >
+            New
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("free")}
+            className={`pb-2 transition-colors whitespace-nowrap ${activeTab === "free"
+              ? "border-b-2 border-white text-white font-medium"
+              : "text-neutral-500 hover:text-neutral-300"
+              }`}
+          >
+            Free
+          </button>
+        </div>
       </div>
 
       {/* Table Component */}
