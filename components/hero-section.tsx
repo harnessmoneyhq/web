@@ -27,16 +27,15 @@ export function HeroSection() {
   const commandText = "npx skills add <owner/repo>";
 
   const handleCopy = () => {
-    navigator.clipboard.writeText("One prompt to cashflow");
+    navigator.clipboard.writeText("Copy prompt to start selling");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   return (
     <section className="py-6 sm:py-8 lg:py-10 border-b border-neutral-900">
-      <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 lg:gap-14 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* Left Column: ASCII Banner & Tagline */}
+      <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-x-8 lg:gap-x-14 gap-y-8 lg:gap-y-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Row 1 Left: ASCII Banner */}
         <div className="flex flex-col gap-4">
           {/* ASCII Banner */}
           <div className="relative w-full max-w-full overflow-x-auto flex flex-col items-start">
@@ -60,33 +59,36 @@ export function HeroSection() {
 ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝   ╚═╝   `}
             </pre>
           </div>
+        </div>
 
-          <p className="text-sm sm:text-base lg:text-lg tracking-tight text-white font-mono font-medium uppercase">
-            Executions. Context. Artifacts. Cashflow.
+        {/* Row 1 Right: Taglines */}
+        <div className="flex flex-col justify-start py-1">
+          <p className="text-sm sm:text-base lg:text-[23px] tracking-tight text-white font-mono font-medium uppercase whitespace-nowrap">
+            The Market Layer for AI Execution
+          </p>
+          <p className="text-sm sm:text-base lg:text-lg tracking-tight text-neutral-400 font-mono font-medium uppercase mt-1">
+            Price. Package. Trade.
           </p>
         </div>
 
-        {/* Right Column: Intro text */}
-        <div className="flex flex-col justify-between py-1">
-          <p className="text-neutral-400 text-lg sm:text-2xl lg:text-3xl leading-snug tracking-tight text-balance">
-            Everyone says AI runs on data.<br /> But every AI execution has value. <br />We're building the infrastructure to trade it.
-          </p>
-        </div>
-      </div>
-
-      {/* Sellers & Agents 2-Column Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-10">
-        {/* Left Column: For Sellers */}
+        {/* Row 2 Left: For Sellers */}
         <div>
-          <h2 className="text-xs font-mono font-medium tracking-wider text-white uppercase mb-3 text-left">
+          <h2 className="text-sm font-mono font-medium tracking-wider text-white uppercase mb-3 text-left">
             For sellers
           </h2>
           <div
             onClick={handleCopy}
             className="bg-neutral-900/80 border border-neutral-800 hover:border-neutral-700 transition-colors rounded-lg px-4 h-16 font-mono text-sm text-white flex items-center justify-between gap-4 w-full cursor-pointer group"
           >
-            <code className="truncate flex items-center text-[#97E600] font-medium">
-              One prompt to cashflow
+            <code className="truncate relative flex items-center text-[#97E600] font-medium">
+              <span className={copied ? "opacity-0" : "opacity-100 transition-opacity"}>
+                Copy prompt to start selling
+              </span>
+              {copied && (
+                <span className="absolute inset-0 flex items-center text-[#97E600] font-medium">
+                  Prompt copied!
+                </span>
+              )}
             </code>
             <button
               type="button"
@@ -94,7 +96,7 @@ export function HeroSection() {
               title="Copy to clipboard"
             >
               {copied ? (
-                <svg className="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="h-4 w-4 text-[#97E600]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               ) : (
@@ -106,10 +108,10 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Right Column: Available For These Agents */}
-        <div className="overflow-hidden">
-          <h2 className="text-xs font-mono font-medium tracking-wider text-white uppercase mb-3 text-left">
-            Available for these agents
+        {/* Row 2 Right: Works with these agents */}
+        <div className="overflow-hidden min-w-0">
+          <h2 className="text-sm font-mono font-medium tracking-wider text-white uppercase mb-3 text-left">
+            Works with these agents
           </h2>
           <div className="relative w-full overflow-hidden h-16 flex items-center marquee-container">
             {/* Gradient Edges */}
@@ -137,6 +139,7 @@ export function HeroSection() {
             </div>
           </div>
         </div>
+
       </div>
     </section>
   );
