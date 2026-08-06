@@ -1,8 +1,20 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const NAV_ITEMS = [
+  { name: "Home", href: "/" },
+  { name: "Sellers", href: "/sellers" },
+  { name: "Transactions", href: "/transactions" },
+  { name: "Agents", href: "/agents" },
+];
 
 export function Navbar() {
+  const pathname = usePathname();
+
   return (
-    <header className="sticky top-0 z-50 bg-black">
+    <header className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-neutral-900">
       <div className="flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <div className="flex items-center gap-2">
           {/* Harness Logo */}
@@ -22,37 +34,33 @@ export function Navbar() {
               <rect x="46" y="34" width="24" height="24" rx="7" fill="#97E600" />
             </svg>
           </Link>
-
-
         </div>
 
         {/* Nav Links */}
-        <nav className="flex items-center gap-6 text-sm font-sans">
-          <Link
-            href="/"
-            className="text-neutral-400 hover:text-white transition-colors"
-          >
-            Home
-          </Link>
-          <Link
-            href="/sellers"
-            className="text-neutral-400 hover:text-white transition-colors"
-          >
-            Sellers
-          </Link>
-          <Link
-            href="/transactions"
-            className="text-neutral-400 hover:text-white transition-colors"
-          >
-            Transactions
-          </Link>
-          <Link
-            href="/agents"
-            className="text-neutral-400 hover:text-white transition-colors"
-          >
-            Agents
-          </Link>
+        <nav className="flex items-center gap-6 text-sm font-mono">
+          {NAV_ITEMS.map((item) => {
+            const isActive =
+              item.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(item.href);
 
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`relative py-1.5 transition-colors ${
+                  isActive
+                    ? "text-white font-medium"
+                    : "text-neutral-400 hover:text-neutral-200"
+                }`}
+              >
+                <span>{item.name}</span>
+                {isActive && (
+                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#97E600] rounded-full shadow-[0_0_8px_rgba(151,230,0,0.5)]" />
+                )}
+              </Link>
+            );
+          })}
         </nav>
       </div>
     </header>
