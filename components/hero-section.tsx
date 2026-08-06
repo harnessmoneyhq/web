@@ -63,7 +63,7 @@ export function HeroSection() {
 
         {/* Row 1 Right: Taglines */}
         <div className="flex flex-col justify-start py-1">
-          <p className="text-sm sm:text-base lg:text-[23px] tracking-tight text-white font-mono font-medium uppercase whitespace-nowrap">
+          <p className="text-base sm:text-lg lg:text-[27px] tracking-tight text-white font-mono font-medium uppercase whitespace-nowrap">
             The Market Layer for AI Execution
           </p>
           <p className="text-sm sm:text-base lg:text-lg tracking-tight text-neutral-400 font-mono font-medium uppercase mt-1">
@@ -73,9 +73,12 @@ export function HeroSection() {
 
         {/* Row 2 Left: For Sellers */}
         <div>
-          <h2 className="text-sm font-mono font-medium tracking-wider text-white uppercase mb-3 text-left">
+          <h2 className="text-sm font-mono font-medium tracking-wider text-white uppercase mb-1 text-left">
             For sellers
           </h2>
+          <p className="text-xs font-mono text-neutral-500 mb-3 leading-relaxed">
+            Sell the work behind the output
+          </p>
           <div
             onClick={handleCopy}
             className="bg-neutral-900/80 border border-neutral-800 hover:border-neutral-700 transition-colors rounded-lg px-4 h-16 font-mono text-sm text-white flex items-center justify-between gap-4 w-full cursor-pointer group"
@@ -101,18 +104,24 @@ export function HeroSection() {
                 </svg>
               ) : (
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 002 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 002-2h8a2 2 0 002 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
               )}
             </button>
           </div>
+          <p className="text-xs font-mono text-neutral-500 mt-2.5 leading-relaxed">
+            Package, price, and list your AI work with one prompt
+          </p>
         </div>
 
         {/* Row 2 Right: Works with these agents */}
         <div className="overflow-hidden min-w-0">
-          <h2 className="text-sm font-mono font-medium tracking-wider text-white uppercase mb-3 text-left">
+          <h2 className="text-sm font-mono font-medium tracking-wider text-white uppercase mb-1 text-left">
             Works with these agents
           </h2>
+          <p className="text-xs font-mono text-neutral-500 mb-3 leading-relaxed">
+            Compatible with top coding CLI tools & AI agents
+          </p>
           <div className="relative w-full overflow-hidden h-16 flex items-center marquee-container">
             {/* Gradient Edges */}
             <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
