@@ -67,7 +67,7 @@ export function HeroSection() {
             The Market Layer for AI Execution
           </p>
           <p className="text-sm sm:text-base lg:text-lg tracking-tight text-neutral-400 font-mono font-medium uppercase mt-1">
-            Price. Package. Trade.
+            Package. Price. Trade.
           </p>
         </div>
 
