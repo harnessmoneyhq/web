@@ -2,10 +2,24 @@
 
 import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
-import { ASSETS_DATA, AssetItem } from "@/lib/assets-data";
+import { ASSETS_DATA, AssetItem, AssetCategory } from "@/lib/assets-data";
 
 type SortField = "name" | "model" | "price" | "downloads" | null;
 type SortDirection = "asc" | "desc";
+
+const FILTER_PILLS: { label: string; value: AssetCategory | null }[] = [
+  { label: "All", value: null },
+  { label: "Sessions", value: "session" },
+  { label: "Context", value: "context" },
+  { label: "Traces", value: "trace" },
+  { label: "Tool runs", value: "tool run" },
+  { label: "Retrievals", value: "retrieval" },
+  { label: "Memory", value: "memory" },
+  { label: "Artifacts", value: "artifact" },
+  { label: "Evals", value: "evaluation" },
+  { label: "Observability", value: "observability" },
+  { label: "Error Analysis", value: "error analysis" },
+];
 
 function parsePrice(price: string): number {
   if (price.toLowerCase() === "free") return 0;
@@ -24,12 +38,36 @@ function parseDownloads(downloads: string): number {
   return parseFloat(clean) || 0;
 }
 
+function getPageNumbers(current: number, total: number): (number | "...")[] {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  if (current <= 4) {
+    return [1, 2, 3, 4, 5, "...", total];
+  }
+
+  if (current >= total - 3) {
+    return [1, "...", total - 4, total - 3, total - 2, total - 1, total];
+  }
+
+  return [1, "...", current - 1, current, current + 1, "...", total];
+}
+
 export function AssetsLeaderboard() {
   const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<AssetCategory | null>(null);
   const [activeTab, setActiveTab] = useState<"all" | "featured" | "trending" | "hot" | "free" | "new">("all");
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Reset pagination when search or filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, selectedCategory, activeTab]);
 
   // Keyboard shortcuts ('/' to focus, 'Escape' to clear/blur)
   useEffect(() => {
@@ -68,6 +106,10 @@ export function AssetsLeaderboard() {
 
   const processedAssets = useMemo(() => {
     const filtered = ASSETS_DATA.filter((asset: AssetItem) => {
+      if (selectedCategory && asset.category !== selectedCategory) {
+        return false;
+      }
+
       const matchesSearch =
         asset.name.toLowerCase().includes(search.toLowerCase()) ||
         asset.category.toLowerCase().includes(search.toLowerCase()) ||
@@ -113,7 +155,14 @@ export function AssetsLeaderboard() {
       if (aVal > bVal) return sortDirection === "asc" ? 1 : -1;
       return 0;
     });
-  }, [search, activeTab, sortField, sortDirection]);
+  }, [search, selectedCategory, activeTab, sortField, sortDirection]);
+
+  const totalPages = Math.ceil(processedAssets.length / pageSize) || 1;
+
+  const paginatedAssets = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return processedAssets.slice(start, start + pageSize);
+  }, [processedAssets, currentPage, pageSize]);
 
   const renderSortIndicator = (field: SortField) => {
     if (sortField !== field) {
@@ -133,7 +182,7 @@ export function AssetsLeaderboard() {
   return (
     <section className="py-8 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Section Title */}
-      <h2 className="text-xs font-mono font-medium tracking-wider text-white uppercase mb-4">
+      <h2 className="text-sm font-mono font-medium tracking-wider text-white uppercase mb-4">
         Leaderboard
       </h2>
 
@@ -182,6 +231,27 @@ export function AssetsLeaderboard() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Category Filter Pills */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-4 scrollbar-none scroll-smooth">
+        {FILTER_PILLS.map((pill) => {
+          const isActive = selectedCategory === pill.value;
+          return (
+            <button
+              key={pill.label}
+              type="button"
+              onClick={() => setSelectedCategory(isActive && pill.value !== null ? null : pill.value)}
+              className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium whitespace-nowrap transition-all duration-200 border cursor-pointer ${
+                isActive
+                  ? "bg-[#97E600]/15 text-[#97E600] border-[#97E600]/50 shadow-[0_0_12px_rgba(151,230,0,0.15)]"
+                  : "bg-neutral-900/80 text-neutral-400 border-neutral-800 hover:text-white hover:border-neutral-700 hover:bg-neutral-800/60"
+              }`}
+            >
+              {pill.label}
+            </button>
+          );
+        })}
       </div>
 
       {/* Filter Tabs */}
@@ -304,7 +374,7 @@ export function AssetsLeaderboard() {
             No assets matching &quot;{search}&quot;
           </div>
         ) : (
-          processedAssets.map((asset, index) => (
+          paginatedAssets.map((asset, index) => (
             <Link
               key={asset.id}
               href={`/assets/${asset.id}`}
@@ -312,7 +382,7 @@ export function AssetsLeaderboard() {
             >
               {/* Sequential Rank Index (1, 2, 3...) */}
               <div className="lg:col-span-1 text-sm text-neutral-500 font-mono">
-                {index + 1}
+                {(currentPage - 1) * pageSize + index + 1}
               </div>
 
               {/* Asset Info */}
@@ -387,6 +457,64 @@ export function AssetsLeaderboard() {
           ))
         )}
       </div>
+
+      {/* Pagination Controls */}
+      {processedAssets.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-neutral-900 font-mono text-xs text-neutral-400">
+          <div>
+            Showing <span className="text-white font-medium">{(currentPage - 1) * pageSize + 1}</span>-
+            <span className="text-white font-medium">
+              {Math.min(currentPage * pageSize, processedAssets.length)}
+            </span>{" "}
+            of <span className="text-white font-medium">{processedAssets.length}</span> assets
+          </div>
+
+          <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 sm:pb-0">
+            <button
+              type="button"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              className="px-3 py-1.5 rounded bg-neutral-900 border border-neutral-800 text-neutral-300 hover:text-white hover:border-neutral-700 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+            >
+              Previous
+            </button>
+
+            {getPageNumbers(currentPage, totalPages).map((page, idx) => {
+              if (page === "...") {
+                return (
+                  <span key={`ellipsis-${idx}`} className="px-2 py-1.5 text-neutral-600 select-none">
+                    ...
+                  </span>
+                );
+              }
+              const isCurrent = currentPage === page;
+              return (
+                <button
+                  key={page}
+                  type="button"
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-3 py-1.5 rounded transition-all cursor-pointer font-medium ${
+                    isCurrent
+                      ? "bg-[#97E600]/15 text-[#97E600] border border-[#97E600]/40 shadow-[0_0_8px_rgba(151,230,0,0.15)]"
+                      : "bg-neutral-900 text-neutral-400 border border-neutral-800 hover:text-white hover:border-neutral-700"
+                  }`}
+                >
+                  {page}
+                </button>
+              );
+            })}
+
+            <button
+              type="button"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              className="px-3 py-1.5 rounded bg-neutral-900 border border-neutral-800 text-neutral-300 hover:text-white hover:border-neutral-700 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
