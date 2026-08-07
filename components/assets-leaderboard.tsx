@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ASSETS_DATA, AssetItem, AssetCategory } from "@/lib/assets-data";
+import { parsePrice, parseDownloads, getPageNumbers } from "@/lib/utils";
 import {
   Table,
   TableHeader,
@@ -29,39 +30,6 @@ const FILTER_PILLS: { label: string; value: AssetCategory | null }[] = [
   { label: "Observability", value: "observability" },
   { label: "Error Analysis", value: "error analysis" },
 ];
-
-function parsePrice(price: string): number {
-  if (price.toLowerCase() === "free") return 0;
-  const match = price.match(/([\d.]+)/);
-  return match ? parseFloat(match[1]) : 0;
-}
-
-function parseDownloads(downloads: string): number {
-  const clean = downloads.toUpperCase().trim();
-  if (clean.endsWith("M")) {
-    return parseFloat(clean.replace("M", "")) * 1_000_000;
-  }
-  if (clean.endsWith("K")) {
-    return parseFloat(clean.replace("K", "")) * 1_000;
-  }
-  return parseFloat(clean) || 0;
-}
-
-function getPageNumbers(current: number, total: number): (number | "...")[] {
-  if (total <= 7) {
-    return Array.from({ length: total }, (_, i) => i + 1);
-  }
-
-  if (current <= 4) {
-    return [1, 2, 3, 4, 5, "...", total];
-  }
-
-  if (current >= total - 3) {
-    return [1, "...", total - 4, total - 3, total - 2, total - 1, total];
-  }
-
-  return [1, "...", current - 1, current, current + 1, "...", total];
-}
 
 export function AssetsLeaderboard() {
   const router = useRouter();
@@ -435,7 +403,7 @@ export function AssetsLeaderboard() {
                       <span className="text-[10px] font-mono text-neutral-400 bg-neutral-900 border border-neutral-800 px-1.5 py-0.5 rounded">
                         {asset.model}
                       </span>
-                      <span className="text-[10px] font-mono text-[#97E600] bg-[#97E600]/10 border border-[#97E600]/30 px-1.5 py-0.5 rounded-full font-medium">
+                      <span className="text-[10px] font-mono text-[#97E600] font-medium">
                         {asset.price}
                       </span>
                     </div>
@@ -450,10 +418,8 @@ export function AssetsLeaderboard() {
                 </TableCell>
 
                 {/* Price (Desktop) */}
-                <TableCell className="hidden lg:table-cell px-3 py-3 text-right">
-                  <span className="text-xs font-mono font-medium text-[#97E600] bg-[#97E600]/10 border border-[#97E600]/30 px-2 py-0.5 rounded-full">
-                    {asset.price}
-                  </span>
+                <TableCell className="hidden lg:table-cell px-3 py-3 text-right font-mono text-xs font-medium text-[#97E600]">
+                  {asset.price}
                 </TableCell>
 
                 {/* Sparkline Graphic (Desktop) */}
