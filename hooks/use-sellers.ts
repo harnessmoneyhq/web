@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { usePaymentEvents } from "@/hooks/use-transactions";
-import { getSellerSpecialties } from "@/lib/assets-data";
 
 export type Seller = {
     id: string;
@@ -146,10 +145,7 @@ export function useSellers() {
             });
         }
 
-        return Array.from(mergedMap.values()).map((seller) => ({
-            ...seller,
-            specialties: getSellerSpecialties(seller.address),
-        }));
+        return Array.from(mergedMap.values());
     }, [dbSellers, events]);
 
     return {

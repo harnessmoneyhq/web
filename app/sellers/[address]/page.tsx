@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, notFound } from "next/navigation";
@@ -29,7 +29,9 @@ import {
 import { shortenHash, formatUsdcAmount, isEvmAddress, parseAmount, parseDownloads, formatCount, formatRelativeTime } from "@/lib/utils";
 import { useSellers } from "@/hooks/use-sellers";
 import { usePaymentEvents } from "@/hooks/use-transactions";
-import { getAssetsBySellerAddress, getSellerSpecialties, CATEGORY_DISPLAY_MAP } from "@/lib/assets-data";
+import { CATEGORY_DISPLAY_MAP } from "@/lib/assets-data";
+import type { AssetItem } from "@/lib/assets-data";
+import { createClient } from "@/lib/supabase/client";
 import { CopyableCell } from "@/components/copyable-cell";
 
 const EXPLORER_BASE = "https://testnet.arcscan.app";
@@ -77,15 +79,71 @@ export default function SellerProfilePage() {
             .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     }, [paymentEvents, normalizedAddress]);
 
-    // Listed assets from library
-    const listedAssets = useMemo(() => {
-        return getAssetsBySellerAddress(rawAddress);
+    const [listedAssets, setListedAssets] = useState<AssetItem[]>([]);
+
+    useEffect(() => {
+        if (!rawAddress) return;
+        const supabase = createClient();
+        supabase
+            .from("assets")
+            .select("*")
+            .ilike("seller_address", rawAddress)
+            .order("rank", { ascending: true })
+            .then(({ data }) => {
+                if (!data) { setListedAssets([]); return; }
+                setListedAssets(
+                    data.map((row: {
+                        id: string; rank: number; name: string; category: string; model: string;
+                        price: string; downloads: string; sparkline: number[]; official: boolean;
+                        is_new: boolean; is_trending: boolean; is_hot: boolean; description: string;
+                        endpoint: string; http_method: string; seller_address: string | null;
+                        stats: { uptime?: string; latency?: string; successRate?: string; calls30d?: string } | null;
+                    }) => ({
+                        id: row.id,
+                        rank: row.rank,
+                        name: row.name,
+                        category: row.category as AssetItem["category"],
+                        model: row.model,
+                        price: row.price,
+                        downloads: row.downloads,
+                        sparkline: row.sparkline || [],
+                        official: row.official,
+                        isNew: row.is_new,
+                        isTrending: row.is_trending,
+                        isHot: row.is_hot,
+                        description: row.description || "",
+                        endpoint: row.endpoint,
+                        httpMethod: (row.http_method || "GET") as "GET" | "POST",
+                        sellerAddress: row.seller_address || undefined,
+                        stats: {
+                            uptime: row.stats?.uptime ?? "99.9%",
+                            latency: row.stats?.latency ?? "50ms",
+                            successRate: row.stats?.successRate ?? "99.9%",
+                            calls30d: row.stats?.calls30d ?? "0",
+                        },
+                        codeSnippets: {
+                            curl: `curl -X ${row.http_method || "GET"} ${row.endpoint} -H "Authorization: Bearer $AGENT_USDC_KEY"`,
+                            typescript: `const res = await fetch("${row.endpoint}");`,
+                            python: `res = requests.${(row.http_method || "GET").toLowerCase()}("${row.endpoint}")`,
+                        },
+                    }))
+                );
+            });
     }, [rawAddress]);
 
-    // Category pills computation - only show categories from actually listed assets
     const assetCategories = useMemo(() => {
-        return getSellerSpecialties(rawAddress);
-    }, [rawAddress]);
+        if (registeredSeller && registeredSeller.specialties.length > 0) {
+            return registeredSeller.specialties;
+        }
+        const counts = new Map<string, number>();
+        listedAssets.forEach((asset) => {
+            const cat = CATEGORY_DISPLAY_MAP[asset.category] || asset.category;
+            counts.set(cat, (counts.get(cat) || 0) + 1);
+        });
+        return Array.from(counts.entries())
+            .sort((a, b) => b[1] - a[1])
+            .map(([cat]) => cat);
+    }, [registeredSeller, listedAssets]);
 
     // Metrics calculations
     const listedAssetsCount = useMemo(() => {
