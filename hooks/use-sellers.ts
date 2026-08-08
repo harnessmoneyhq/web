@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { usePaymentEvents, DEFAULT_SELLER_ADDRESS } from "@/hooks/use-transactions";
+import { usePaymentEvents } from "@/hooks/use-transactions";
 import { getSellerSpecialties } from "@/lib/assets-data";
 
 export type Seller = {
@@ -89,7 +89,7 @@ export function useSellers() {
             }>();
 
             events.forEach((ev) => {
-                const rawAddr = ev.seller || ev.seller_address || ev.merchant_address || DEFAULT_SELLER_ADDRESS;
+                const rawAddr = ev.seller || ev.seller_address || ev.merchant_address || "";
                 const key = rawAddr.toLowerCase();
 
                 if (!eventMap.has(key)) {

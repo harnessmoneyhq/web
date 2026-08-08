@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/tooltip";
 import { shortenHash, formatUsdcAmount, isEvmAddress, parseAmount, formatRelativeTime } from "@/lib/utils";
 import { usePayers } from "@/hooks/use-payers";
-import { usePaymentEvents, DEFAULT_SELLER_ADDRESS } from "@/hooks/use-transactions";
+import { usePaymentEvents } from "@/hooks/use-transactions";
 import { CATEGORY_DISPLAY_MAP, getAllAssets } from "@/lib/assets-data";
 import { CopyableCell } from "@/components/copyable-cell";
 
@@ -362,7 +362,7 @@ export default function PayerProfilePage() {
                                     </TableRow>
                                 ) : (
                                     payerTransactions.map((ev) => {
-                                        const sellerAddr = ev.seller || ev.seller_address || ev.merchant_address || DEFAULT_SELLER_ADDRESS;
+                                        const sellerAddr = ev.seller || ev.seller_address || ev.merchant_address || "";
                                         const fallbackName = ev.endpoint.split("/").pop() || "Market Access";
                                         const displayName = ev.asset_name || fallbackName;
 

@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/tooltip";
 import { shortenHash, formatUsdcAmount, isEvmAddress, parseAmount, parseDownloads, formatCount, formatRelativeTime } from "@/lib/utils";
 import { useSellers } from "@/hooks/use-sellers";
-import { usePaymentEvents, DEFAULT_SELLER_ADDRESS } from "@/hooks/use-transactions";
+import { usePaymentEvents } from "@/hooks/use-transactions";
 import { getAssetsBySellerAddress, getSellerSpecialties, CATEGORY_DISPLAY_MAP } from "@/lib/assets-data";
 import { CopyableCell } from "@/components/copyable-cell";
 
@@ -71,7 +71,7 @@ export default function SellerProfilePage() {
         if (!paymentEvents) return [];
         return paymentEvents
             .filter((ev) => {
-                const sellerAddr = (ev.seller || ev.seller_address || ev.merchant_address || DEFAULT_SELLER_ADDRESS).toLowerCase();
+                const sellerAddr = (ev.seller || ev.seller_address || ev.merchant_address || "").toLowerCase();
                 return sellerAddr === normalizedAddress;
             })
             .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());

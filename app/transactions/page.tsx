@@ -15,7 +15,7 @@ import {
     Wallet,
 } from "lucide-react";
 import { shortenHash, formatUsdcAmount, parseAmount, formatDate } from "@/lib/utils";
-import { usePaymentEvents, PaymentEvent, DEFAULT_SELLER_ADDRESS } from "@/hooks/use-transactions";
+import { usePaymentEvents, PaymentEvent } from "@/hooks/use-transactions";
 import { CopyableCell } from "@/components/copyable-cell";
 import { DataTable, ColumnDef } from "@/components/data-table";
 
@@ -67,7 +67,7 @@ function TransactionsContent() {
     const activeSellersCount = useMemo(() => {
         return new Set(
             allEvents.map((ev) =>
-                (ev.seller || ev.seller_address || ev.merchant_address || DEFAULT_SELLER_ADDRESS).toLowerCase()
+                (ev.seller || ev.seller_address || ev.merchant_address || "").toLowerCase()
             )
         ).size;
     }, [allEvents]);
@@ -78,7 +78,7 @@ function TransactionsContent() {
     }, [allEvents, totalVolume]);
 
     const searchFilter = useCallback((ev: PaymentEvent, query: string) => {
-        const sellerAddr = (ev.seller || ev.seller_address || ev.merchant_address || DEFAULT_SELLER_ADDRESS).toLowerCase();
+        const sellerAddr = (ev.seller || ev.seller_address || ev.merchant_address || "").toLowerCase();
         const assetName = (ev.asset_name || "").toLowerCase();
         return (
             (ev.gateway_tx ?? "").toLowerCase().includes(query) ||
@@ -163,7 +163,7 @@ function TransactionsContent() {
             id: "seller",
             header: "Seller",
             cell: (ev) => {
-                const sellerAddr = ev.seller || ev.seller_address || ev.merchant_address || DEFAULT_SELLER_ADDRESS;
+                const sellerAddr = ev.seller || ev.seller_address || ev.merchant_address || "";
                 return (
                     <CopyableCell
                         variant="bright"
