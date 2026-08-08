@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams, notFound } from "next/navigation";
 import { blo } from "blo";
@@ -24,15 +25,12 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import {
-    Tooltip,
-    TooltipContent,
     TooltipProvider,
-    TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { shortenHash, formatUsdcAmount, isEvmAddress, parseAmount, parseDownloads, formatCount, formatDate, formatRelativeTime } from "@/lib/utils";
+import { shortenHash, formatUsdcAmount, isEvmAddress, parseAmount, parseDownloads, formatCount, formatRelativeTime } from "@/lib/utils";
 import { useSellers } from "@/hooks/use-sellers";
-import { usePaymentEvents, PaymentEvent, DEFAULT_SELLER_ADDRESS } from "@/hooks/use-transactions";
-import { getAssetsBySellerAddress, getSellerSpecialties, AssetItem, AssetCategory } from "@/lib/assets-data";
+import { usePaymentEvents, DEFAULT_SELLER_ADDRESS } from "@/hooks/use-transactions";
+import { getAssetsBySellerAddress, getSellerSpecialties, CATEGORY_DISPLAY_MAP } from "@/lib/assets-data";
 import { CopyableCell } from "@/components/copyable-cell";
 
 const EXPLORER_BASE = "https://testnet.arcscan.app";
@@ -45,18 +43,6 @@ function formatSellerSince(isoOrDefault: string): string {
     return `${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-const CATEGORY_DISPLAY_MAP: Record<string, string> = {
-    "session": "Sessions",
-    "context": "Context",
-    "trace": "Traces",
-    "tool run": "Tool Runs",
-    "retrieval": "Retrievals",
-    "memory": "Memory",
-    "artifact": "Artifacts",
-    "evaluation": "Evals",
-    "observability": "Observability",
-    "error analysis": "Error Analysis",
-};
 
 export default function SellerProfilePage() {
     const params = useParams();
@@ -183,9 +169,12 @@ export default function SellerProfilePage() {
                     <div className="bg-neutral-900/40 border border-neutral-800/80 rounded-xl p-5 sm:p-6 mb-8 shadow-sm">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div className="flex items-start sm:items-center gap-4">
-                                <img
+                                <Image
                                     src={blo(formattedAddress)}
                                     alt={formattedAddress}
+                                    width={48}
+                                    height={48}
+                                    unoptimized
                                     className="w-12 h-12 rounded-full flex-shrink-0 border border-neutral-700/80 shadow-md object-cover select-none bg-neutral-800"
                                 />
                                 <div className="min-w-0">
@@ -496,7 +485,7 @@ export default function SellerProfilePage() {
                                                     <CopyableCell
                                                         value={ev.payer}
                                                         label={shortenHash(ev.payer)}
-                                                        href={`/sellers/${ev.payer}`}
+                                                        href={`/agents/${ev.payer}`}
                                                     />
                                                 </TableCell>
 
