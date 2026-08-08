@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect, ReactNode } from "react";
+import { useMemo, useState, ReactNode } from "react";
 import {
     Select,
     SelectContent,
@@ -73,17 +73,16 @@ export function DataTable<T>({
     extraToolbar,
 }: DataTableProps<T>) {
     const [filter, setFilter] = useState(initialSearchQuery);
+    const [prevInitialSearch, setPrevInitialSearch] = useState(initialSearchQuery);
     const [sortField, setSortField] = useState<string | null>(defaultSortField);
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">(defaultSortDirection);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState<number>(defaultPageSize);
 
-    // Sync search filter if initialSearchQuery updates externally (e.g. URL query params)
-    useEffect(() => {
-        if (initialSearchQuery !== undefined) {
-            setFilter(initialSearchQuery);
-        }
-    }, [initialSearchQuery]);
+    if (initialSearchQuery !== prevInitialSearch) {
+        setPrevInitialSearch(initialSearchQuery);
+        setFilter(initialSearchQuery);
+    }
 
     const handleSort = (column: ColumnDef<T>) => {
         if (!column.sortable) return;
