@@ -12,6 +12,7 @@ import {
     Package,
 } from "lucide-react";
 import { shortenHash, formatUsdcAmount, parseAmount, formatCount } from "@/lib/utils";
+import { PUBLISH_PROMPT } from "@/lib/publish-prompt";
 import { useSellers, Seller } from "@/hooks/use-sellers";
 import { CopyableCell } from "@/components/copyable-cell";
 import { Identicon } from "@/components/identicon";
@@ -35,7 +36,7 @@ export default function SellersPage() {
     }, [sellers]);
 
     const handleCopy = () => {
-        navigator.clipboard.writeText("Copy prompt to start selling");
+        navigator.clipboard.writeText(PUBLISH_PROMPT);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };

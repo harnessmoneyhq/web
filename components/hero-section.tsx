@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { PUBLISH_PROMPT } from "@/lib/publish-prompt";
 
 const AGENTS = [
   { name: "Antigravity", slug: "antigravity", logo: "/agents/logos/antigravity.svg" },
@@ -24,10 +25,9 @@ const AGENTS = [
 
 export function HeroSection() {
   const [copied, setCopied] = useState(false);
-  const commandText = "npx skills add <owner/repo>";
 
   const handleCopy = () => {
-    navigator.clipboard.writeText("Copy prompt to start selling");
+    navigator.clipboard.writeText(PUBLISH_PROMPT);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
