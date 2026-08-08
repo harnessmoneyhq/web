@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams, notFound } from "next/navigation";
 import { blo } from "blo";
@@ -10,7 +11,6 @@ import {
     Loader2,
     DollarSign,
     Unlock,
-    Package,
     ArrowUpRight,
     Tag,
     Receipt,
@@ -25,10 +25,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import {
-    Tooltip,
-    TooltipContent,
     TooltipProvider,
-    TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { shortenHash, formatUsdcAmount, isEvmAddress, parseAmount, formatRelativeTime } from "@/lib/utils";
 import { usePayers } from "@/hooks/use-payers";
@@ -139,9 +136,12 @@ export default function PayerProfilePage() {
                     <div className="bg-neutral-900/40 border border-neutral-800/80 rounded-xl p-5 sm:p-6 mb-8 shadow-sm">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div className="flex items-start sm:items-center gap-4">
-                                <img
+                                <Image
                                     src={blo(formattedAddress)}
                                     alt={formattedAddress}
+                                    width={48}
+                                    height={48}
+                                    unoptimized
                                     className="w-12 h-12 rounded-full flex-shrink-0 border border-neutral-700/80 shadow-md object-cover select-none bg-neutral-800"
                                 />
                                 <div className="min-w-0">

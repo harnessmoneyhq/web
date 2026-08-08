@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
     TooltipProvider,
@@ -24,8 +24,9 @@ export default function AgentsPage() {
     // ── Metrics computation ──
     const totalPayers = payers.length;
 
+    const nowRef = useRef(Date.now());
     const activePayers30D = useMemo(() => {
-        const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+        const thirtyDaysAgo = nowRef.current - 30 * 24 * 60 * 60 * 1000;
         return payers.filter((p) => {
             const time = new Date(p.last_active).getTime();
             return !isNaN(time) && time >= thirtyDaysAgo;
