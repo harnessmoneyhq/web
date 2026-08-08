@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { usePaymentEvents } from "@/hooks/use-transactions";
-import { CATEGORY_DISPLAY_MAP, getAllAssets } from "@/lib/assets-data";
+import { CATEGORY_DISPLAY_MAP } from "@/lib/assets-data";
 import { parseAmount } from "@/lib/utils";
 
 export type Payer = {
@@ -90,14 +90,6 @@ export function usePayers() {
         if (dbPayers.length === 0 && (!events || events.length === 0))
             return dbPayers;
 
-        const allAssets = getAllAssets();
-        const assetMapByEndpoint = new Map<string, string>();
-        allAssets.forEach((asset) => {
-            if (asset.endpoint) {
-                assetMapByEndpoint.set(asset.endpoint.toLowerCase(), asset.category);
-            }
-        });
-
         const mergedMap = new Map<string, Payer>();
 
         dbPayers.forEach((p) => {
@@ -142,28 +134,30 @@ export function usePayers() {
                 const categoryCounts = new Map<string, number>();
                 sorted.forEach((ev) => {
                     const endpointLower = (ev.endpoint || "").toLowerCase();
-                    let rawCategory = assetMapByEndpoint.get(endpointLower);
-                    if (!rawCategory) {
-                        if (endpointLower.includes("/context")) rawCategory = "context";
-                        else if (endpointLower.includes("/trace")) rawCategory = "trace";
-                        else if (endpointLower.includes("/retrieval"))
-                            rawCategory = "retrieval";
-                        else if (endpointLower.includes("/tool"))
-                            rawCategory = "tool run";
-                        else if (endpointLower.includes("/memory"))
-                            rawCategory = "memory";
-                        else if (endpointLower.includes("/artifact"))
-                            rawCategory = "artifact";
-                        else if (endpointLower.includes("/eval"))
-                            rawCategory = "evaluation";
-                        else if (endpointLower.includes("/obs"))
-                            rawCategory = "observability";
-                        else if (endpointLower.includes("/error"))
-                            rawCategory = "error analysis";
-                        else if (endpointLower.includes("/session"))
-                            rawCategory = "session";
-                        else rawCategory = "context";
-                    }
+                    let rawCategory: string;
+                    if (endpointLower.includes("/context")) rawCategory = "context";
+                    else if (endpointLower.includes("/trace")) rawCategory = "trace";
+                    else if (endpointLower.includes("/retrieval"))
+                        rawCategory = "retrieval";
+                    else if (endpointLower.includes("/tool") || endpointLower.includes("/market") || endpointLower.includes("/polymarket") || endpointLower.includes("/weather") || endpointLower.includes("/swap") || endpointLower.includes("/github"))
+                        rawCategory = "tool run";
+                    else if (endpointLower.includes("/memory"))
+                        rawCategory = "memory";
+                    else if (endpointLower.includes("/artifact"))
+                        rawCategory = "artifact";
+                    else if (endpointLower.includes("/eval"))
+                        rawCategory = "evaluation";
+                    else if (endpointLower.includes("/obs") || endpointLower.includes("/solana"))
+                        rawCategory = "observability";
+                    else if (endpointLower.includes("/error"))
+                        rawCategory = "error analysis";
+                    else if (endpointLower.includes("/session"))
+                        rawCategory = "session";
+                    else if (endpointLower.includes("/search") || endpointLower.includes("/research"))
+                        rawCategory = "retrieval";
+                    else if (endpointLower.includes("/news"))
+                        rawCategory = "trace";
+                    else rawCategory = "context";
                     const displayCategory =
                         CATEGORY_DISPLAY_MAP[rawCategory] || rawCategory;
                     categoryCounts.set(

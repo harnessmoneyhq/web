@@ -29,7 +29,7 @@ import {
 import { shortenHash, formatUsdcAmount, isEvmAddress, parseAmount, formatRelativeTime } from "@/lib/utils";
 import { usePayers } from "@/hooks/use-payers";
 import { usePaymentEvents } from "@/hooks/use-transactions";
-import { CATEGORY_DISPLAY_MAP, getAllAssets } from "@/lib/assets-data";
+import { CATEGORY_DISPLAY_MAP } from "@/lib/assets-data";
 import { CopyableCell } from "@/components/copyable-cell";
 
 const EXPLORER_BASE = "https://testnet.arcscan.app";
@@ -66,12 +66,22 @@ export default function PayerProfilePage() {
             return currentPayer.buys;
         }
         const set = new Set<string>();
-        const allAssets = getAllAssets();
         payerTransactions.forEach((ev) => {
-            const match = allAssets.find((a) => a.endpoint.toLowerCase() === (ev.endpoint || "").toLowerCase());
-            if (match) {
-                set.add(CATEGORY_DISPLAY_MAP[match.category] || match.category);
-            }
+            const ep = (ev.endpoint || "").toLowerCase();
+            let rawCategory: string;
+            if (ep.includes("/context")) rawCategory = "context";
+            else if (ep.includes("/trace")) rawCategory = "trace";
+            else if (ep.includes("/retrieval") || ep.includes("/search") || ep.includes("/research")) rawCategory = "retrieval";
+            else if (ep.includes("/tool") || ep.includes("/market") || ep.includes("/polymarket") || ep.includes("/weather") || ep.includes("/swap") || ep.includes("/github")) rawCategory = "tool run";
+            else if (ep.includes("/memory")) rawCategory = "memory";
+            else if (ep.includes("/artifact")) rawCategory = "artifact";
+            else if (ep.includes("/eval")) rawCategory = "evaluation";
+            else if (ep.includes("/obs") || ep.includes("/solana")) rawCategory = "observability";
+            else if (ep.includes("/error")) rawCategory = "error analysis";
+            else if (ep.includes("/session")) rawCategory = "session";
+            else if (ep.includes("/news")) rawCategory = "trace";
+            else rawCategory = "context";
+            set.add(CATEGORY_DISPLAY_MAP[rawCategory] || rawCategory);
         });
         return Array.from(set);
     }, [currentPayer, payerTransactions]);
