@@ -19,7 +19,7 @@ import { DataTable, ColumnDef } from "@/components/data-table";
 
 export default function SellersPage() {
     const router = useRouter();
-    const { sellers, loading } = useSellers();
+    const { sellers, loading, error, retry } = useSellers();
     const [copied, setCopied] = useState(false);
 
     const totalRevenue = useMemo(() => {
@@ -182,67 +182,119 @@ export default function SellersPage() {
                     </div>
 
                     {/* Overview Stat Cards Grid */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 font-mono">
-                        <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
-                            <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
-                                <span>Total Sellers</span>
-                                <Store size={14} className="text-[#97E600]" />
-                            </div>
-                            <div className="text-xl font-bold text-white">
-                                {sellers.length}
-                            </div>
-                            <div className="text-[10px] text-neutral-500 mt-0.5">All-time</div>
+                    {loading ? (
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 font-mono">
+                            {Array.from({ length: 4 }).map((_, i) => (
+                                <div key={i} className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
+                                    <div className="flex items-center justify-between mb-1">
+                                        <div className="h-3 w-20 bg-neutral-800 rounded animate-pulse" />
+                                        <div className="h-3.5 w-3.5 bg-neutral-800 rounded animate-pulse" />
+                                    </div>
+                                    <div className="h-7 w-14 bg-neutral-800 rounded animate-pulse mt-2" />
+                                    <div className="h-2.5 w-16 bg-neutral-800/60 rounded animate-pulse mt-2" />
+                                </div>
+                            ))}
                         </div>
+                    ) : (
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 font-mono">
+                            <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
+                                <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
+                                    <span>Total Sellers</span>
+                                    <Store size={14} className="text-[#97E600]" />
+                                </div>
+                                <div className="text-xl font-bold text-white">
+                                    {sellers.length}
+                                </div>
+                                <div className="text-[10px] text-neutral-500 mt-0.5">All-time</div>
+                            </div>
 
-                        <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
-                            <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
-                                <span>Listed Assets</span>
-                                <Package size={14} className="text-[#97E600]" />
+                            <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
+                                <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
+                                    <span>Listed Assets</span>
+                                    <Package size={14} className="text-[#97E600]" />
+                                </div>
+                                <div className="text-xl font-bold text-white">
+                                    {totalAssetsListed}
+                                </div>
+                                <div className="text-[10px] text-neutral-500 mt-0.5">Assets currently published by sellers</div>
                             </div>
-                            <div className="text-xl font-bold text-white">
-                                {totalAssetsListed}
-                            </div>
-                            <div className="text-[10px] text-neutral-500 mt-0.5">Assets currently published by sellers</div>
-                        </div>
 
-                        <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
-                            <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
-                                <span>Asset Unlocks</span>
-                                <Unlock size={14} className="text-[#97E600]" />
+                            <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
+                                <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
+                                    <span>Asset Unlocks</span>
+                                    <Unlock size={14} className="text-[#97E600]" />
+                                </div>
+                                <div className="text-xl font-bold text-white">
+                                    {formatCount(totalSales)}
+                                </div>
+                                <div className="text-[10px] text-neutral-500 mt-0.5">Successful paid accesses</div>
                             </div>
-                            <div className="text-xl font-bold text-white">
-                                {formatCount(totalSales)}
-                            </div>
-                            <div className="text-[10px] text-neutral-500 mt-0.5">Successful paid accesses</div>
-                        </div>
 
-                        <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
-                            <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
-                                <span>Sellers Volume</span>
-                                <DollarSign size={14} className="text-[#97E600]" />
+                            <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
+                                <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
+                                    <span>Sellers Volume</span>
+                                    <DollarSign size={14} className="text-[#97E600]" />
+                                </div>
+                                <div className="text-xl font-bold text-white truncate">
+                                    {formatUsdcAmount(totalRevenue)}
+                                </div>
+                                <div className="text-[10px] text-neutral-500 mt-0.5">USDC settled</div>
                             </div>
-                            <div className="text-xl font-bold text-white truncate">
-                                {formatUsdcAmount(totalRevenue)}
-                            </div>
-                            <div className="text-[10px] text-neutral-500 mt-0.5">USDC settled</div>
                         </div>
-                    </div>
+                    )}
 
                     {/* Sellers Leaderboard Data Table */}
-                    <DataTable
-                        data={sellers}
-                        columns={columns}
-                        rowKey={(s) => s.id}
-                        searchPlaceholder="Discover creators & sellers by name, address, specialty..."
-                        searchFilter={searchFilter}
-                        defaultSortField="volume"
-                        defaultSortDirection="desc"
-                        loading={loading}
-                        loadingText="Loading sellers..."
-                        emptyText="No sellers found."
-                        itemLabel="sellers"
-                        onRowClick={(s) => router.push(`/sellers/${s.address}`)}
-                    />
+                    {error ? (
+                        <div className="flex flex-col items-center justify-center py-20 gap-4">
+                            <p className="text-neutral-400 font-mono text-sm text-center">
+                                Failed to load sellers: {error}
+                            </p>
+                            <button
+                                type="button"
+                                onClick={retry}
+                                className="px-4 py-2 bg-neutral-900 border border-neutral-700 hover:border-neutral-600 text-white font-mono text-xs rounded-lg transition-colors cursor-pointer"
+                            >
+                                Retry
+                            </button>
+                        </div>
+                    ) : loading ? (
+                        <div className="border border-neutral-800 rounded-lg overflow-hidden">
+                            <div className="px-4 py-3 border-b border-neutral-800">
+                                <div className="h-9 w-full bg-neutral-900 rounded animate-pulse" />
+                            </div>
+                            <div className="divide-y divide-neutral-900">
+                                {Array.from({ length: 8 }).map((_, i) => (
+                                    <div key={i} className="flex items-center gap-4 px-4 py-3.5">
+                                        <div className="h-4 w-6 bg-neutral-800 rounded animate-pulse shrink-0" />
+                                        <div className="h-8 w-8 bg-neutral-800 rounded-full animate-pulse shrink-0" />
+                                        <div className="h-4 w-28 bg-neutral-800 rounded animate-pulse" />
+                                        <div className="h-4 w-24 bg-neutral-800/60 rounded animate-pulse hidden md:block" />
+                                        <div className="flex-1" />
+                                        <div className="h-4 w-10 bg-neutral-800 rounded animate-pulse" />
+                                        <div className="h-4 w-10 bg-neutral-800 rounded animate-pulse" />
+                                        <div className="h-4 w-16 bg-neutral-800 rounded animate-pulse" />
+                                        <div className="h-4 w-16 bg-neutral-800/60 rounded animate-pulse hidden sm:block" />
+                                        <div className="h-4 w-14 bg-neutral-800/60 rounded animate-pulse hidden lg:block" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ) : (
+                        <DataTable
+                            data={sellers}
+                            columns={columns}
+                            rowKey={(s) => s.id}
+                            searchPlaceholder="Discover creators & sellers by name, address, specialty..."
+                            searchFilter={searchFilter}
+                            defaultSortField="volume"
+                            defaultSortDirection="desc"
+                            loading={false}
+                            loadingText="Loading sellers..."
+                            emptyText="No sellers found."
+                            itemLabel="sellers"
+                            onRowClick={(s) => router.push(`/sellers/${s.address}`)}
+                        />
+                    )}
                 </main>
             </div>
         </TooltipProvider>
