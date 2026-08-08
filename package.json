@@ -12,6 +12,7 @@
     "@circle-fin/x402-batching": "^3.3.0",
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.112.0",
+    "@x402/evm": "^2.21.0",
     "blo": "2.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
