@@ -8,7 +8,6 @@ import { blo } from "blo";
 import {
     Copy,
     Check,
-    Loader2,
     DollarSign,
     Unlock,
     Package,
@@ -59,7 +58,7 @@ export default function SellerProfilePage() {
     const formattedAddress = (rawAddress.startsWith("0x") ? rawAddress : `0x${rawAddress}`) as `0x${string}`;
 
     // Data hooks
-    const { sellers, loading: loadingSellers } = useSellers();
+    const { sellers, loading: loadingSellers, error: sellersError, retry: retrySellers } = useSellers();
     const { events: paymentEvents, loading: loadingEvents } = usePaymentEvents();
 
     // Seller metadata from useSellers hook if registered
@@ -165,6 +164,101 @@ export default function SellerProfilePage() {
                         <span className="text-neutral-200">{shortenHash(formattedAddress)}</span>
                     </nav>
 
+                    {/* ERROR STATE */}
+                    {sellersError ? (
+                        <div className="flex flex-col items-center justify-center py-20 gap-4">
+                            <p className="text-neutral-400 font-mono text-sm text-center">
+                                Failed to load seller data: {sellersError}
+                            </p>
+                            <button
+                                type="button"
+                                onClick={retrySellers}
+                                className="px-4 py-2 bg-neutral-900 border border-neutral-700 hover:border-neutral-600 text-white font-mono text-xs rounded-lg transition-colors cursor-pointer"
+                            >
+                                Retry
+                            </button>
+                        </div>
+                    ) : isLoading ? (
+                        <>
+                            {/* Skeleton: Identity Header */}
+                            <div className="bg-neutral-900/40 border border-neutral-800/80 rounded-xl p-5 sm:p-6 mb-8">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-full bg-neutral-800 animate-pulse shrink-0" />
+                                    <div className="flex-1 min-w-0">
+                                        <div className="h-5 w-72 max-w-full bg-neutral-800 rounded animate-pulse" />
+                                        <div className="h-3 w-48 bg-neutral-800/60 rounded animate-pulse mt-3" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Skeleton: Metric Cards */}
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 font-mono">
+                                {Array.from({ length: 4 }).map((_, i) => (
+                                    <div key={i} className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
+                                        <div className="flex items-center justify-between mb-1">
+                                            <div className="h-3 w-20 bg-neutral-800 rounded animate-pulse" />
+                                            <div className="h-3.5 w-3.5 bg-neutral-800 rounded animate-pulse" />
+                                        </div>
+                                        <div className="h-8 w-16 bg-neutral-800 rounded animate-pulse mt-2" />
+                                        <div className="h-2.5 w-24 bg-neutral-800/60 rounded animate-pulse mt-2" />
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Skeleton: Category Pills */}
+                            <div className="mb-8 bg-neutral-900/30 border border-neutral-800/60 rounded-lg p-4">
+                                <div className="h-3 w-12 bg-neutral-800 rounded animate-pulse mb-3" />
+                                <div className="flex gap-2">
+                                    {Array.from({ length: 3 }).map((_, i) => (
+                                        <div key={i} className="h-7 w-20 bg-neutral-800 rounded-md animate-pulse" />
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Skeleton: Listed Assets Table */}
+                            <div className="mb-10">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="h-4 w-28 bg-neutral-800 rounded animate-pulse" />
+                                    <div className="h-3 w-24 bg-neutral-800/60 rounded animate-pulse" />
+                                </div>
+                                <div className="border border-neutral-800/80 rounded-lg overflow-hidden divide-y divide-neutral-900">
+                                    {Array.from({ length: 4 }).map((_, i) => (
+                                        <div key={i} className="flex items-center gap-4 px-3 py-3.5">
+                                            <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+                                                <div className="h-3.5 w-44 bg-neutral-800 rounded animate-pulse" />
+                                                <div className="h-3 w-56 bg-neutral-800/40 rounded animate-pulse" />
+                                            </div>
+                                            <div className="h-5 w-16 bg-neutral-800 rounded animate-pulse" />
+                                            <div className="h-3.5 w-12 bg-neutral-800 rounded animate-pulse" />
+                                            <div className="h-3.5 w-10 bg-neutral-800 rounded animate-pulse hidden sm:block" />
+                                            <div className="h-3.5 w-14 bg-neutral-800 rounded animate-pulse" />
+                                            <div className="h-3.5 w-14 bg-neutral-800/60 rounded animate-pulse hidden md:block" />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Skeleton: Recent Transactions Table */}
+                            <div>
+                                <div className="h-4 w-40 bg-neutral-800 rounded animate-pulse mb-4" />
+                                <div className="border border-neutral-800/80 rounded-lg overflow-hidden divide-y divide-neutral-900">
+                                    {Array.from({ length: 5 }).map((_, i) => (
+                                        <div key={i} className="flex items-center gap-4 px-3 py-3.5">
+                                            <div className="h-3.5 w-24 bg-neutral-800 rounded animate-pulse" />
+                                            <div className="h-3.5 w-24 bg-neutral-800 rounded animate-pulse" />
+                                            <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+                                                <div className="h-3.5 w-36 bg-neutral-800 rounded animate-pulse" />
+                                                <div className="h-3 w-48 bg-neutral-800/40 rounded animate-pulse" />
+                                            </div>
+                                            <div className="h-3.5 w-14 bg-neutral-800 rounded animate-pulse" />
+                                            <div className="h-3.5 w-16 bg-neutral-800/60 rounded animate-pulse hidden sm:block" />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                    <>
                     {/* 2. SELLER IDENTITY HEADER */}
                     <div className="bg-neutral-900/40 border border-neutral-800/80 rounded-xl p-5 sm:p-6 mb-8 shadow-sm">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -316,14 +410,7 @@ export default function SellerProfilePage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody className="divide-y divide-neutral-900">
-                                {isLoading ? (
-                                    <TableRow className="hover:bg-transparent border-b-0">
-                                        <TableCell colSpan={6} className="py-12 text-center text-neutral-500 font-mono text-sm">
-                                            <Loader2 size={16} className="animate-spin inline mr-2" />
-                                            Loading listed assets...
-                                        </TableCell>
-                                    </TableRow>
-                                ) : listedAssets.length === 0 ? (
+                                {listedAssets.length === 0 ? (
                                     <TableRow className="hover:bg-transparent border-b-0">
                                         <TableCell colSpan={6} className="py-12 text-center text-neutral-500 font-mono text-sm">
                                             No active listings published by this seller.
@@ -441,14 +528,7 @@ export default function SellerProfilePage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody className="divide-y divide-neutral-900">
-                                {isLoading ? (
-                                    <TableRow className="hover:bg-transparent border-b-0">
-                                        <TableCell colSpan={5} className="py-12 text-center text-neutral-500 font-mono text-sm">
-                                            <Loader2 size={16} className="animate-spin inline mr-2" />
-                                            Loading transaction history...
-                                        </TableCell>
-                                    </TableRow>
-                                ) : sellerTransactions.length === 0 ? (
+                                {sellerTransactions.length === 0 ? (
                                     <TableRow className="hover:bg-transparent border-b-0">
                                         <TableCell colSpan={5} className="py-12 text-center text-neutral-500 font-mono text-sm">
                                             No transaction history recorded for this seller.
@@ -529,6 +609,8 @@ export default function SellerProfilePage() {
                             </Link>
                         </div>
                     </div>
+                    </>
+                    )}
                 </main>
             </div>
         </TooltipProvider>
