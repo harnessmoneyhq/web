@@ -6,12 +6,16 @@ import { AssetItem } from "@/lib/assets-data";
 
 interface AssetDetailViewProps {
   asset: AssetItem;
+  hasContent?: boolean;
 }
 
-export function AssetDetailView({ asset }: AssetDetailViewProps) {
+export function AssetDetailView({ asset, hasContent }: AssetDetailViewProps) {
   const [copiedEndpoint, setCopiedEndpoint] = useState(false);
   const [activeSnippetTab, setActiveSnippetTab] = useState<"curl" | "typescript" | "python">("curl");
   const [copiedSnippet, setCopiedSnippet] = useState(false);
+  const [unlockedContent, setUnlockedContent] = useState<string | null>(null);
+  const [unlocking, setUnlocking] = useState(false);
+  const [unlockError, setUnlockError] = useState<string | null>(null);
 
   const handleCopyEndpoint = () => {
     navigator.clipboard.writeText(asset.endpoint);
@@ -178,6 +182,93 @@ export function AssetDetailView({ asset }: AssetDetailViewProps) {
                 </pre>
               </div>
             </section>
+
+            {/* Premium Content Section */}
+            {hasContent && (
+              <section className="bg-neutral-900/40 border border-neutral-800/80 rounded-xl p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xs font-mono font-medium text-neutral-400 uppercase tracking-wider">
+                    Premium Content
+                  </h2>
+                  <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider">
+                    x402 Gated
+                  </span>
+                </div>
+
+                {unlockedContent ? (
+                  <div className="bg-neutral-950 border border-neutral-800 rounded-lg p-4 font-mono text-sm text-neutral-300 overflow-x-auto whitespace-pre-wrap leading-relaxed max-h-[600px] overflow-y-auto">
+                    {unlockedContent}
+                  </div>
+                ) : (
+                  <div className="bg-neutral-950 border border-neutral-800 rounded-lg p-8 flex flex-col items-center justify-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-[#97E600]/10 border border-[#97E600]/30 flex items-center justify-center">
+                      <svg className="w-6 h-6 text-[#97E600]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm font-mono text-white font-medium mb-1">
+                        Full AI execution content
+                      </p>
+                      <p className="text-xs font-mono text-neutral-500">
+                        Pay {asset.price} USDC to unlock the complete output
+                      </p>
+                    </div>
+                    {unlockError && (
+                      <p className="text-xs font-mono text-red-400 text-center">
+                        {unlockError}
+                      </p>
+                    )}
+                    <button
+                      type="button"
+                      disabled={unlocking}
+                      onClick={async () => {
+                        setUnlocking(true);
+                        setUnlockError(null);
+                        try {
+                          const res = await fetch(`/api/assets/${asset.id}/content`);
+                          if (res.status === 402) {
+                            const paymentRequired = res.headers.get("PAYMENT-REQUIRED");
+                            setUnlockError(
+                              paymentRequired
+                                ? "Payment required — use an x402 client to unlock this content."
+                                : "Payment required."
+                            );
+                          } else if (res.ok) {
+                            const data = await res.json();
+                            setUnlockedContent(data.content);
+                          } else {
+                            setUnlockError("Failed to unlock content.");
+                          }
+                        } catch {
+                          setUnlockError("Network error. Please try again.");
+                        } finally {
+                          setUnlocking(false);
+                        }
+                      }}
+                      className="px-6 py-3 bg-[#97E600] hover:bg-[#85cc00] disabled:opacity-50 text-black font-semibold rounded-lg font-mono text-sm transition-colors flex items-center gap-2"
+                    >
+                      {unlocking ? (
+                        <>
+                          <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                          </svg>
+                          <span>Unlocking...</span>
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                          </svg>
+                          <span>Unlock Content — {asset.price} USDC</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
+              </section>
+            )}
 
             {/* Detailed 30D Stats & Telemetry Section */}
             <section className="bg-neutral-900/40 border border-neutral-800/80 rounded-xl p-6">
