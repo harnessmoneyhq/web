@@ -166,6 +166,17 @@ export function withGateway(
                 `[x402] Payment settled: ${endpoint} — ${amountUsdc} USDC from ${payer}`,
             );
 
+            // Inject settlement info into request headers so the handler can read it
+            const settlementHeader = Buffer.from(
+                JSON.stringify({
+                    success: true,
+                    transaction: settleResult.transaction,
+                    network: requirements.network,
+                    payer,
+                }),
+            ).toString("base64");
+            req.headers.set("PAYMENT-RESPONSE", settlementHeader);
+
             // Call the actual route handler
             const response = await handler(req);
 
