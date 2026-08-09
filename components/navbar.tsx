@@ -24,14 +24,27 @@ export function Navbar() {
             className="hover:opacity-80 transition-opacity flex items-center"
           >
             <svg
-              height="20"
-              width="20"
-              viewBox="0 0 100 100"
+              height="24"
+              width="24"
+              viewBox="0 0 200 200"
               fill="none"
             >
-              <rect x="6" y="6" width="88" height="88" rx="22" stroke="#97E600" strokeWidth="6.5" />
-              <rect x="24" y="24" width="52" height="52" rx="15" stroke="#97E600" strokeWidth="5.5" />
-              <rect x="46" y="34" width="24" height="24" rx="7" fill="#97E600" />
+              <defs>
+                <linearGradient id="nav-neon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#D9FF3F" />
+                  <stop offset="100%" stopColor="#97E600" />
+                </linearGradient>
+              </defs>
+              <rect x="20" y="20" width="160" height="160" rx="32" fill="none" stroke="#97E600" strokeWidth="10" />
+              <path
+                d="M 76 46 L 140 46 A 22 22 0 0 1 162 68 C 157 86, 157 114, 162 132 A 22 22 0 0 1 140 154 L 76 154 A 22 22 0 0 1 54 132 L 54 68 A 22 22 0 0 1 76 46 Z"
+                fill="none"
+                stroke="#B8FF4D"
+                strokeWidth="10"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <rect x="97" y="72" width="56" height="56" rx="14" fill="url(#nav-neon-gradient)" />
             </svg>
           </Link>
         </div>
