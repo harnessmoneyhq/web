@@ -90,6 +90,7 @@ export default async function AssetPage({ params }: PageProps) {
   }
 
   const asset = mapRowToAsset(data);
+  const hasContent = Boolean(data.content);
 
-  return <AssetDetailView asset={asset} />;
+  return <AssetDetailView asset={asset} hasContent={hasContent} />;
 }
