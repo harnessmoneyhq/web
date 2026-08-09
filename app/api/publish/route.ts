@@ -116,7 +116,7 @@ async function handlePublish(req: NextRequest): Promise<NextResponse> {
         if (insertError) {
             console.error("[publish] Insert failed:", insertError.message);
             return NextResponse.json(
-                { error: "Failed to publish asset", details: insertError.message },
+                { error: `Failed to publish asset: ${insertError.message}` },
                 { status: 500 },
             );
         }
