@@ -215,239 +215,239 @@ export default function PayerProfilePage() {
                             </div>
                         </>
                     ) : (
-                    <>
-                    {/* PAYER IDENTITY HEADER */}
-                    <div className="bg-neutral-900/40 border border-neutral-800/80 rounded-xl p-5 sm:p-6 mb-8 shadow-sm">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                            <div className="flex items-start sm:items-center gap-4">
-                                <Image
-                                    src={blo(formattedAddress)}
-                                    alt={formattedAddress}
-                                    width={48}
-                                    height={48}
-                                    unoptimized
-                                    className="w-12 h-12 rounded-full flex-shrink-0 border border-neutral-700/80 shadow-md object-cover select-none bg-neutral-800"
-                                />
-                                <div className="min-w-0">
-                                    <div className="flex items-center gap-2 flex-wrap">
-                                        <h1 className="font-mono text-base sm:text-xl font-bold tracking-tight text-white break-all">
-                                            {formattedAddress}
-                                        </h1>
-                                        <button
-                                            type="button"
-                                            onClick={handleHeaderCopy}
-                                            className="inline-flex items-center gap-1 bg-neutral-900 hover:bg-neutral-800 border border-neutral-700/80 px-2 py-1 rounded text-xs font-mono text-neutral-300 hover:text-white transition-colors cursor-pointer shrink-0"
-                                            title="Copy full wallet address"
-                                        >
-                                            {copiedHeader ? (
-                                                <>
-                                                    <Check size={12} className="text-[#97E600]" />
-                                                    <span className="text-[#97E600] font-medium">Copied</span>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Copy size={12} className="text-neutral-400" />
-                                                    <span>Copy</span>
-                                                </>
-                                            )}
-                                        </button>
+                        <>
+                            {/* PAYER IDENTITY HEADER */}
+                            <div className="bg-neutral-900/40 border border-neutral-800/80 rounded-xl p-5 sm:p-6 mb-8 shadow-sm">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                    <div className="flex items-start sm:items-center gap-4">
+                                        <Image
+                                            src={blo(formattedAddress)}
+                                            alt={formattedAddress}
+                                            width={48}
+                                            height={48}
+                                            unoptimized
+                                            className="w-12 h-12 rounded-full flex-shrink-0 border border-neutral-700/80 shadow-md object-cover select-none bg-neutral-800"
+                                        />
+                                        <div className="min-w-0">
+                                            <div className="flex items-center gap-2 flex-wrap">
+                                                <h1 className="font-mono text-base sm:text-xl font-bold tracking-tight text-white break-all">
+                                                    {formattedAddress}
+                                                </h1>
+                                                <button
+                                                    type="button"
+                                                    onClick={handleHeaderCopy}
+                                                    className="inline-flex items-center gap-1 bg-neutral-900 hover:bg-neutral-800 border border-neutral-700/80 px-2 py-1 rounded text-xs font-mono text-neutral-300 hover:text-white transition-colors cursor-pointer shrink-0"
+                                                    title="Copy full wallet address"
+                                                >
+                                                    {copiedHeader ? (
+                                                        <>
+                                                            <Check size={12} className="text-[#97E600]" />
+                                                            <span className="text-[#97E600] font-medium">Copied</span>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Copy size={12} className="text-neutral-400" />
+                                                            <span>Copy</span>
+                                                        </>
+                                                    )}
+                                                </button>
+                                            </div>
+                                            <p className="text-neutral-400 font-mono text-xs mt-1.5 flex items-center gap-2">
+                                                <span>Payer Wallet</span>
+                                                <span className="text-neutral-600">•</span>
+                                                <span className="inline-flex items-center gap-1">
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-[#97E600] animate-pulse" />
+                                                    Last active {lastActiveTime}
+                                                </span>
+                                            </p>
+                                        </div>
                                     </div>
-                                    <p className="text-neutral-400 font-mono text-xs mt-1.5 flex items-center gap-2">
-                                        <span>Payer Wallet</span>
-                                        <span className="text-neutral-600">•</span>
-                                        <span className="inline-flex items-center gap-1">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-[#97E600] animate-pulse" />
-                                            Last active {lastActiveTime}
-                                        </span>
-                                    </p>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    {/* PAYER METRICS */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 font-mono">
-                        <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
-                            <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
-                                <span>Asset Unlocks</span>
-                                <Unlock size={14} className="text-neutral-400" />
-                            </div>
-                            <div className="text-2xl font-bold text-white">
-                                {uniqueAssetsCount}
-                            </div>
-                            <div className="text-[10px] text-neutral-500 mt-1">Distinct assets accessed</div>
-                        </div>
+                            {/* PAYER METRICS */}
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 font-mono">
+                                <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
+                                    <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
+                                        <span>Asset Unlocks</span>
+                                        <Unlock size={14} className="text-neutral-400" />
+                                    </div>
+                                    <div className="text-2xl font-bold text-white">
+                                        {uniqueAssetsCount}
+                                    </div>
+                                    <div className="text-[10px] text-neutral-500 mt-1">Distinct assets accessed</div>
+                                </div>
 
-                        <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
-                            <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
-                                <span>Payments</span>
-                                <Receipt size={14} className="text-neutral-400" />
-                            </div>
-                            <div className="text-2xl font-bold text-white">
-                                {paymentsCount}
-                            </div>
-                            <div className="text-[10px] text-neutral-500 mt-1">Total settled x402 payments</div>
-                        </div>
+                                <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
+                                    <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
+                                        <span>Payments</span>
+                                        <Receipt size={14} className="text-neutral-400" />
+                                    </div>
+                                    <div className="text-2xl font-bold text-white">
+                                        {paymentsCount}
+                                    </div>
+                                    <div className="text-[10px] text-neutral-500 mt-1">Total settled x402 payments</div>
+                                </div>
 
-                        <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
-                            <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
-                                <span>Total Spend</span>
-                                <DollarSign size={14} className="text-neutral-400" />
-                            </div>
-                            <div className="text-2xl font-bold text-white truncate">
-                                {formatUsdcAmount(totalSpendNum)}
-                            </div>
-                            <div className="text-[10px] text-neutral-500 mt-1">USDC settled</div>
-                        </div>
+                                <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
+                                    <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
+                                        <span>Total Spend</span>
+                                        <DollarSign size={14} className="text-neutral-400" />
+                                    </div>
+                                    <div className="text-2xl font-bold text-white truncate">
+                                        {formatUsdcAmount(totalSpendNum)}
+                                    </div>
+                                    <div className="text-[10px] text-neutral-500 mt-1">USDC settled</div>
+                                </div>
 
-                        <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
-                            <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
-                                <span>Avg. Payment</span>
-                                <Tag size={14} className="text-neutral-400" />
+                                <div className="bg-neutral-900/60 border border-neutral-800 p-4 rounded-lg">
+                                    <div className="text-neutral-500 text-xs font-medium uppercase mb-1 flex items-center justify-between">
+                                        <span>Avg. Payment</span>
+                                        <Tag size={14} className="text-neutral-400" />
+                                    </div>
+                                    <div className="text-2xl font-bold text-white truncate">
+                                        {formatUsdcAmount(avgPaymentNum)}
+                                    </div>
+                                    <div className="text-[10px] text-neutral-500 mt-1">Average payment per access</div>
+                                </div>
                             </div>
-                            <div className="text-2xl font-bold text-white truncate">
-                                {formatUsdcAmount(avgPaymentNum)}
-                            </div>
-                            <div className="text-[10px] text-neutral-500 mt-1">Average payment per access</div>
-                        </div>
-                    </div>
 
-                    {/* PREFERRED CATEGORIES (BUYS) */}
-                    {preferredCategories.length > 0 && (
-                        <div className="mb-8 bg-neutral-900/30 border border-neutral-800/60 rounded-lg p-4">
-                            <h2 className="text-xs font-mono font-medium text-neutral-400 uppercase tracking-wider mb-3">
-                                BUYS
-                            </h2>
-                            <div className="flex flex-wrap gap-2 items-center">
-                                {preferredCategories.map((cat, i) => (
-                                    <Badge
-                                        key={i}
-                                        variant="outline"
-                                        className="bg-neutral-900 border-neutral-800 text-neutral-200 hover:border-neutral-700 font-mono text-xs font-normal px-3 py-1 rounded-md transition-colors"
-                                    >
-                                        {cat}
-                                    </Badge>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* RECENT TRANSACTIONS TABLE */}
-                    <div>
-                        <div className="mb-4 flex items-center justify-between">
-                            <h2 className="text-sm font-mono font-medium tracking-wider text-white uppercase">
-                                Payment History
-                            </h2>
-                            <span className="text-xs font-mono text-neutral-500">
-                                {payerTransactions.length} payments
-                            </span>
-                        </div>
-
-                        <Table>
-                            <TableHeader className="border-b border-neutral-800/80">
-                                <TableRow className="border-b border-neutral-800/80 hover:bg-transparent">
-                                    <TableHead className="font-mono font-medium text-xs uppercase text-neutral-500 px-3 py-3">
-                                        TRANSACTION HASH
-                                    </TableHead>
-                                    <TableHead className="font-mono font-medium text-xs uppercase text-neutral-500 px-3 py-3">
-                                        SELLER
-                                    </TableHead>
-                                    <TableHead className="font-mono font-medium text-xs uppercase text-neutral-500 px-3 py-3">
-                                        ASSET / ENDPOINT
-                                    </TableHead>
-                                    <TableHead className="font-mono font-medium text-xs uppercase text-neutral-500 px-3 py-3 text-right">
-                                        AMOUNT (USDC)
-                                    </TableHead>
-                                    <TableHead className="font-mono font-medium text-xs uppercase text-neutral-500 px-3 py-3 text-right hidden sm:table-cell">
-                                        SETTLED AT
-                                    </TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody className="divide-y divide-neutral-900">
-                                {payerTransactions.length === 0 ? (
-                                    <TableRow className="hover:bg-transparent border-b-0">
-                                        <TableCell colSpan={5} className="py-12 text-center text-neutral-500 font-mono text-sm">
-                                            No payment transactions recorded for this wallet.
-                                        </TableCell>
-                                    </TableRow>
-                                ) : (
-                                    payerTransactions.map((ev) => {
-                                        const sellerAddr = ev.seller || ev.seller_address || ev.merchant_address || "";
-                                        const fallbackName = ev.endpoint.split("/").pop() || "Market Access";
-                                        const displayName = ev.asset_name || fallbackName;
-
-                                        return (
-                                            <TableRow
-                                                key={ev.id}
-                                                className="border-b border-neutral-900 hover:bg-neutral-900/60 transition-colors group"
+                            {/* PREFERRED CATEGORIES (BUYS) */}
+                            {preferredCategories.length > 0 && (
+                                <div className="mb-8 bg-neutral-900/30 border border-neutral-800/60 rounded-lg p-4">
+                                    <h2 className="text-xs font-mono font-medium text-neutral-400 uppercase tracking-wider mb-3">
+                                        BUYS
+                                    </h2>
+                                    <div className="flex flex-wrap gap-2 items-center">
+                                        {preferredCategories.map((cat, i) => (
+                                            <Badge
+                                                key={i}
+                                                variant="outline"
+                                                className="bg-neutral-900 border-neutral-800 text-neutral-200 hover:border-neutral-700 font-mono text-xs font-normal px-3 py-1 rounded-md transition-colors"
                                             >
-                                                {/* TRANSACTION HASH */}
-                                                <TableCell className="px-3 py-3 font-mono text-xs">
-                                                    {ev.gateway_tx ? (
-                                                        <CopyableCell
-                                                            value={ev.gateway_tx}
-                                                            label={shortenHash(ev.gateway_tx, 6)}
-                                                            href={
-                                                                ev.gateway_tx.startsWith("0x")
-                                                                    ? `${EXPLORER_BASE}/tx/${ev.gateway_tx}`
-                                                                    : undefined
-                                                            }
-                                                        />
-                                                    ) : (
-                                                        <span className="text-neutral-600">—</span>
-                                                    )}
-                                                </TableCell>
+                                                {cat}
+                                            </Badge>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
-                                                {/* SELLER */}
-                                                <TableCell className="px-3 py-3 font-mono text-xs">
-                                                    <CopyableCell
-                                                        value={sellerAddr}
-                                                        label={shortenHash(sellerAddr)}
-                                                        href={`/sellers/${sellerAddr}`}
-                                                    />
-                                                </TableCell>
+                            {/* RECENT TRANSACTIONS TABLE */}
+                            <div>
+                                <div className="mb-4 flex items-center justify-between">
+                                    <h2 className="text-sm font-mono font-medium tracking-wider text-white uppercase">
+                                        Payment History
+                                    </h2>
+                                    <span className="text-xs font-mono text-neutral-500">
+                                        {payerTransactions.length} payments
+                                    </span>
+                                </div>
 
-                                                {/* ASSET / ENDPOINT */}
-                                                <TableCell className="px-3 py-3 min-w-0">
-                                                    <div className="flex flex-col justify-center">
-                                                        <span className="font-medium text-white text-xs truncate">
-                                                            {displayName}
-                                                        </span>
-                                                        <div className="mt-0.5">
-                                                            <code className="text-[10px] text-neutral-400 font-mono bg-neutral-900/90 border border-neutral-800/80 px-1.5 py-0.5 rounded">
-                                                                {ev.endpoint}
-                                                            </code>
-                                                        </div>
-                                                    </div>
-                                                </TableCell>
-
-                                                {/* AMOUNT (USDC) */}
-                                                <TableCell className="px-3 py-3 text-right font-mono text-xs font-medium text-[#97E600]">
-                                                    {formatUsdcAmount(ev.amount_usdc)}
-                                                </TableCell>
-
-                                                {/* SETTLED AT */}
-                                                <TableCell className="px-3 py-3 text-right font-mono text-xs text-neutral-400 hidden sm:table-cell">
-                                                    {formatRelativeTime(ev.created_at)}
+                                <Table>
+                                    <TableHeader className="border-b border-neutral-800/80">
+                                        <TableRow className="border-b border-neutral-800/80 hover:bg-transparent">
+                                            <TableHead className="font-mono font-medium text-xs uppercase text-neutral-500 px-3 py-3">
+                                                TRANSACTION Id
+                                            </TableHead>
+                                            <TableHead className="font-mono font-medium text-xs uppercase text-neutral-500 px-3 py-3">
+                                                SELLER
+                                            </TableHead>
+                                            <TableHead className="font-mono font-medium text-xs uppercase text-neutral-500 px-3 py-3">
+                                                ASSET / ENDPOINT
+                                            </TableHead>
+                                            <TableHead className="font-mono font-medium text-xs uppercase text-neutral-500 px-3 py-3 text-right">
+                                                AMOUNT (USDC)
+                                            </TableHead>
+                                            <TableHead className="font-mono font-medium text-xs uppercase text-neutral-500 px-3 py-3 text-right hidden sm:table-cell">
+                                                SETTLED AT
+                                            </TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody className="divide-y divide-neutral-900">
+                                        {payerTransactions.length === 0 ? (
+                                            <TableRow className="hover:bg-transparent border-b-0">
+                                                <TableCell colSpan={5} className="py-12 text-center text-neutral-500 font-mono text-sm">
+                                                    No payment transactions recorded for this wallet.
                                                 </TableCell>
                                             </TableRow>
-                                        );
-                                    })
-                                )}
-                            </TableBody>
-                        </Table>
+                                        ) : (
+                                            payerTransactions.map((ev) => {
+                                                const sellerAddr = ev.seller || ev.seller_address || ev.merchant_address || "";
+                                                const fallbackName = ev.endpoint.split("/").pop() || "Market Access";
+                                                const displayName = ev.asset_name || fallbackName;
 
-                        <div className="mt-4 flex justify-end">
-                            <Link
-                                href={`/transactions?payer=${formattedAddress}`}
-                                className="text-xs font-mono text-[#97E600] hover:underline flex items-center gap-1 transition-colors"
-                            >
-                                <span>View all transactions</span>
-                                <ArrowUpRight size={13} />
-                            </Link>
-                        </div>
-                    </div>
-                    </>
+                                                return (
+                                                    <TableRow
+                                                        key={ev.id}
+                                                        className="border-b border-neutral-900 hover:bg-neutral-900/60 transition-colors group"
+                                                    >
+                                                        {/* TRANSACTION HASH */}
+                                                        <TableCell className="px-3 py-3 font-mono text-xs">
+                                                            {ev.gateway_tx ? (
+                                                                <CopyableCell
+                                                                    value={ev.gateway_tx}
+                                                                    label={shortenHash(ev.gateway_tx, 6)}
+                                                                    href={
+                                                                        ev.gateway_tx.startsWith("0x")
+                                                                            ? `${EXPLORER_BASE}/tx/${ev.gateway_tx}`
+                                                                            : undefined
+                                                                    }
+                                                                />
+                                                            ) : (
+                                                                <span className="text-neutral-600">—</span>
+                                                            )}
+                                                        </TableCell>
+
+                                                        {/* SELLER */}
+                                                        <TableCell className="px-3 py-3 font-mono text-xs">
+                                                            <CopyableCell
+                                                                value={sellerAddr}
+                                                                label={shortenHash(sellerAddr)}
+                                                                href={`/sellers/${sellerAddr}`}
+                                                            />
+                                                        </TableCell>
+
+                                                        {/* ASSET / ENDPOINT */}
+                                                        <TableCell className="px-3 py-3 min-w-0">
+                                                            <div className="flex flex-col justify-center">
+                                                                <span className="font-medium text-white text-xs truncate">
+                                                                    {displayName}
+                                                                </span>
+                                                                <div className="mt-0.5">
+                                                                    <code className="text-[10px] text-neutral-400 font-mono bg-neutral-900/90 border border-neutral-800/80 px-1.5 py-0.5 rounded">
+                                                                        {ev.endpoint}
+                                                                    </code>
+                                                                </div>
+                                                            </div>
+                                                        </TableCell>
+
+                                                        {/* AMOUNT (USDC) */}
+                                                        <TableCell className="px-3 py-3 text-right font-mono text-xs font-medium text-[#97E600]">
+                                                            {formatUsdcAmount(ev.amount_usdc)}
+                                                        </TableCell>
+
+                                                        {/* SETTLED AT */}
+                                                        <TableCell className="px-3 py-3 text-right font-mono text-xs text-neutral-400 hidden sm:table-cell">
+                                                            {formatRelativeTime(ev.created_at)}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                );
+                                            })
+                                        )}
+                                    </TableBody>
+                                </Table>
+
+                                <div className="mt-4 flex justify-end">
+                                    <Link
+                                        href={`/transactions?payer=${formattedAddress}`}
+                                        className="text-xs font-mono text-[#97E600] hover:underline flex items-center gap-1 transition-colors"
+                                    >
+                                        <span>View all transactions</span>
+                                        <ArrowUpRight size={13} />
+                                    </Link>
+                                </div>
+                            </div>
+                        </>
                     )}
                 </main>
             </div>

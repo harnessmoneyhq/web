@@ -100,7 +100,7 @@ function TransactionsContent() {
         },
         {
             id: "tx",
-            header: "Transaction Hash",
+            header: "Transaction Id",
             cell: (ev) => (
                 ev.gateway_tx ? (
                     <CopyableCell
