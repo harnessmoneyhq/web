@@ -59,13 +59,13 @@ npm run start
 1. **Deposit USDC into the Gateway** (one-time):
 
 ```bash
-npx tsx deposit-gateway.ts
+npx tsx scripts/ops/deposit-gateway.ts
 ```
 
 2. **Publish**:
 
 ```bash
-npx tsx publish-observability.ts
+npx tsx scripts/publish/publish-observability.ts
 ```
 
 The publish flow:
@@ -139,7 +139,46 @@ lib/
   assets-data.ts              # Types and constants
   supabase/                   # Supabase client (browser + server)
   utils.ts                    # Formatting helpers
+scripts/
+  data/                       # AI datasets (JSON + source XLSX)
+  publish/                    # Publish scripts (pay & upload assets via x402)
+  ops/                        # Operational scripts (agent buyer, Gateway deposit)
 ```
+
+## Scripts
+
+### `scripts/data/`
+
+AI execution datasets used as asset content for publishing:
+
+| File | Description |
+|------|-------------|
+| `observability-content.json` | 300 synthetic AI inference traces across 4 apps and 4 models |
+| `context-window-content.json` | 60 synthetic context window events simulating a 4096-token limit |
+| `eval-content.json` | 50 synthetic LLM evaluation cases across 5 categories |
+| `tool-run-content.json` | 24 synthetic agent runs with 46 tool calls across 6 tools |
+
+Source spreadsheets (`*.xlsx`) are also stored here.
+
+### `scripts/publish/`
+
+Each script publishes one dataset to the marketplace via the x402 payment flow:
+
+```bash
+npx tsx scripts/publish/publish-observability.ts
+npx tsx scripts/publish/publish-context-window.ts
+npx tsx scripts/publish/publish-eval.ts
+npx tsx scripts/publish/publish-tool-run.ts
+```
+
+Requires a `PUBLISHER_PRIVATE_KEY` (or `PUBLISHER_2_PRIVATE_KEY` / `PUBLISHER_3_PRIVATE_KEY`) in `.env` with USDC deposited into the Gateway.
+
+### `scripts/ops/`
+
+| Script | Description |
+|--------|-------------|
+| `deposit-gateway.ts` | Deposit USDC into the Circle Gateway Wallet |
+| `agent-buyer.ts` | Automated buyer agent — creates an ephemeral wallet, funds it, and purchases assets at 1 tx/sec with configurable `--limit` spending cap |
 
 ## Environment Variables
 
