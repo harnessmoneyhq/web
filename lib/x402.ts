@@ -167,6 +167,22 @@ export function withGateway(
                 console.error("Failed to record payment event:", error.message);
             }
 
+            // Increment asset unlock count
+            const assetIdMatch = endpoint.match(/\/assets\/([^/]+)\/content/);
+            if (assetIdMatch) {
+                const { data: asset } = await supabase
+                    .from("assets")
+                    .select("downloads")
+                    .eq("id", assetIdMatch[1])
+                    .single();
+                if (asset) {
+                    await supabase
+                        .from("assets")
+                        .update({ downloads: String(Number(asset.downloads || 0) + 1) })
+                        .eq("id", assetIdMatch[1]);
+                }
+            }
+
             console.log(
                 `[x402] Payment settled: ${endpoint} — ${amountUsdc} USDC from ${payer}`,
             );

@@ -295,11 +295,10 @@ export function AssetsLeaderboard() {
                     key={pill.label}
                     type="button"
                     onClick={() => setSelectedCategory(isActive && pill.value !== null ? null : pill.value)}
-                    className={`px-3.5 py-2 rounded-full text-xs font-mono font-medium whitespace-nowrap transition-all duration-200 border cursor-pointer ${
-                      isActive
+                    className={`px-3.5 py-2 rounded-full text-xs font-mono font-medium whitespace-nowrap transition-all duration-200 border cursor-pointer ${isActive
                         ? "bg-[#97E600]/15 text-[#97E600] border-[#97E600]/60 shadow-[0_0_12px_rgba(151,230,0,0.15)]"
                         : "bg-neutral-900/80 text-neutral-300 border-neutral-700 hover:text-white hover:border-neutral-600 hover:bg-neutral-800/60"
-                    }`}
+                      }`}
                   >
                     {pill.label}
                   </button>
@@ -420,7 +419,7 @@ export function AssetsLeaderboard() {
                     onClick={() => handleSort("downloads")}
                     className="flex items-center justify-end w-full hover:text-white transition-colors group/btn"
                   >
-                    Downloads {renderSortIndicator("downloads")}
+                    Unlocks {renderSortIndicator("downloads")}
                   </button>
                 </TableHead>
               </TableRow>
@@ -559,11 +558,10 @@ export function AssetsLeaderboard() {
                       key={page}
                       type="button"
                       onClick={() => setCurrentPage(page)}
-                      className={`px-3 py-1.5 rounded transition-all cursor-pointer font-medium ${
-                        isCurrent
+                      className={`px-3 py-1.5 rounded transition-all cursor-pointer font-medium ${isCurrent
                           ? "bg-[#97E600]/15 text-[#97E600] border border-[#97E600]/40 shadow-[0_0_8px_rgba(151,230,0,0.15)]"
                           : "bg-neutral-900 text-neutral-400 border border-neutral-800 hover:text-white hover:border-neutral-700"
-                      }`}
+                        }`}
                     >
                       {page}
                     </button>
