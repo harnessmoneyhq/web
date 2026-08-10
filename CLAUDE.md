@@ -58,6 +58,10 @@ lib/
   supabase/client.ts          # Browser Supabase client (@supabase/ssr)
   supabase/server.ts          # Server Supabase client (@supabase/supabase-js, for server components)
   utils.ts                    # Formatting helpers (addresses, USDC, dates, pagination)
+scripts/
+  data/                       # AI datasets (JSON + source XLSX) for publishing
+  publish/                    # x402 publish scripts (one per dataset, reads from ../data/)
+  ops/                        # Operational scripts (agent-buyer, deposit-gateway)
 ```
 
 ## Key Patterns
