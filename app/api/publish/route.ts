@@ -123,6 +123,49 @@ async function handlePublish(req: NextRequest): Promise<NextResponse> {
 
         console.log(`[publish] Asset published: ${finalId} by ${sellerAddress}`);
 
+        // Upsert seller into sellers table
+        if (sellerAddress) {
+            const sellerId = `seller-${sellerAddress.slice(2, 10).toLowerCase()}`;
+            const CATEGORY_DISPLAY: Record<string, string> = {
+                session: "Sessions", context: "Context", trace: "Traces",
+                "tool run": "Tool Runs", retrieval: "Retrievals", memory: "Memory",
+                artifact: "Artifacts", evaluation: "Evals", observability: "Observability",
+                "error analysis": "Error Analysis",
+            };
+            const specialty = CATEGORY_DISPLAY[category] || category;
+
+            const { data: existingSeller } = await supabase
+                .from("sellers")
+                .select("id, specialties, assets_count")
+                .eq("address", sellerAddress)
+                .single();
+
+            if (existingSeller) {
+                const specialties = existingSeller.specialties.includes(specialty)
+                    ? existingSeller.specialties
+                    : [...existingSeller.specialties, specialty];
+                await supabase.from("sellers").update({
+                    specialties,
+                    assets_count: existingSeller.assets_count + 1,
+                    last_active: "just now",
+                }).eq("id", existingSeller.id);
+            } else {
+                await supabase.from("sellers").insert({
+                    id: sellerId,
+                    name: `Seller ${sellerAddress.slice(0, 6)}...${sellerAddress.slice(-4)}`,
+                    address: sellerAddress,
+                    specialties: [specialty],
+                    assets_count: 1,
+                    total_sales: 0,
+                    total_revenue_usdc: "0.0000",
+                    avg_sale_usdc: "0.0000",
+                    last_active: "just now",
+                    network: "Arc Testnet",
+                    verified: false,
+                });
+            }
+        }
+
         return NextResponse.json({
             success: true,
             asset: {
