@@ -150,11 +150,14 @@ export function withGateway(
             const payer = settleResult.payer ?? verifyResult.payer ?? "unknown";
 
             const { error } = await supabase.from("payment_events").insert({
+                id: crypto.randomUUID(),
                 endpoint,
                 payer,
+                seller_address: requirements.payTo,
                 amount_usdc: amountUsdc,
                 network: requirements.network,
                 gateway_tx: settleResult.transaction ?? null,
+                status: "settled",
                 raw: { requirements, settleResult },
             });
 
