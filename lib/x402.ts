@@ -167,22 +167,25 @@ export function withGateway(
                 console.error("Failed to record payment event:", error.message);
             }
 
-            // Increment asset unlock count and update sparkline
+            // Increment asset unlock count, sparkline, and 30D calls
             const assetIdMatch = endpoint.match(/\/assets\/([^/]+)\/content/);
             if (assetIdMatch) {
                 const { data: asset } = await supabase
                     .from("assets")
-                    .select("downloads, sparkline")
+                    .select("downloads, sparkline, stats")
                     .eq("id", assetIdMatch[1])
                     .single();
                 if (asset) {
                     const sparkline: number[] = asset.sparkline || [0, 0, 0, 0, 0, 0, 0, 0];
                     sparkline[7] = (sparkline[7] || 0) + 1;
+                    const stats = asset.stats || {};
+                    stats.calls30d = String(Number(stats.calls30d || 0) + 1);
                     await supabase
                         .from("assets")
                         .update({
                             downloads: String(Number(asset.downloads || 0) + 1),
                             sparkline,
+                            stats,
                         })
                         .eq("id", assetIdMatch[1]);
                 }
