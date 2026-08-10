@@ -73,7 +73,7 @@ export function withGateway(
     price: string,
     endpoint: string,
     payTo?: `0x${string}`,
-    metadata?: { asset_name?: string },
+    metadata?: { asset_name?: string; category?: string },
 ) {
     const requirements = buildPaymentRequirements(price, payTo);
 
@@ -154,6 +154,7 @@ export function withGateway(
                 id: crypto.randomUUID(),
                 endpoint,
                 asset_name: metadata?.asset_name ?? null,
+                category: metadata?.category ?? null,
                 payer,
                 seller_address: requirements.payTo,
                 amount_usdc: amountUsdc,

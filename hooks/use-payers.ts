@@ -133,31 +133,35 @@ export function usePayers() {
 
                 const categoryCounts = new Map<string, number>();
                 sorted.forEach((ev) => {
-                    const endpointLower = (ev.endpoint || "").toLowerCase();
                     let rawCategory: string;
-                    if (endpointLower.includes("/context")) rawCategory = "context";
-                    else if (endpointLower.includes("/trace")) rawCategory = "trace";
-                    else if (endpointLower.includes("/retrieval"))
-                        rawCategory = "retrieval";
-                    else if (endpointLower.includes("/tool") || endpointLower.includes("/market") || endpointLower.includes("/polymarket") || endpointLower.includes("/weather") || endpointLower.includes("/swap") || endpointLower.includes("/github"))
-                        rawCategory = "tool run";
-                    else if (endpointLower.includes("/memory"))
-                        rawCategory = "memory";
-                    else if (endpointLower.includes("/artifact"))
-                        rawCategory = "artifact";
-                    else if (endpointLower.includes("/eval"))
-                        rawCategory = "evaluation";
-                    else if (endpointLower.includes("/obs") || endpointLower.includes("/solana"))
-                        rawCategory = "observability";
-                    else if (endpointLower.includes("/error"))
-                        rawCategory = "error analysis";
-                    else if (endpointLower.includes("/session"))
-                        rawCategory = "session";
-                    else if (endpointLower.includes("/search") || endpointLower.includes("/research"))
-                        rawCategory = "retrieval";
-                    else if (endpointLower.includes("/news"))
-                        rawCategory = "trace";
-                    else rawCategory = "context";
+                    if (ev.category) {
+                        rawCategory = ev.category;
+                    } else {
+                        const endpointLower = (ev.endpoint || "").toLowerCase();
+                        if (endpointLower.includes("/context")) rawCategory = "context";
+                        else if (endpointLower.includes("/trace")) rawCategory = "trace";
+                        else if (endpointLower.includes("/retrieval"))
+                            rawCategory = "retrieval";
+                        else if (endpointLower.includes("/tool") || endpointLower.includes("/market") || endpointLower.includes("/polymarket") || endpointLower.includes("/weather") || endpointLower.includes("/swap") || endpointLower.includes("/github"))
+                            rawCategory = "tool run";
+                        else if (endpointLower.includes("/memory"))
+                            rawCategory = "memory";
+                        else if (endpointLower.includes("/artifact"))
+                            rawCategory = "artifact";
+                        else if (endpointLower.includes("/eval"))
+                            rawCategory = "evaluation";
+                        else if (endpointLower.includes("/obs") || endpointLower.includes("/solana"))
+                            rawCategory = "observability";
+                        else if (endpointLower.includes("/error"))
+                            rawCategory = "error analysis";
+                        else if (endpointLower.includes("/session"))
+                            rawCategory = "session";
+                        else if (endpointLower.includes("/search") || endpointLower.includes("/research"))
+                            rawCategory = "retrieval";
+                        else if (endpointLower.includes("/news"))
+                            rawCategory = "trace";
+                        else rawCategory = "context";
+                    }
                     const displayCategory =
                         CATEGORY_DISPLAY_MAP[rawCategory] || rawCategory;
                     categoryCounts.set(

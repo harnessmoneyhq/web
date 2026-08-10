@@ -6,6 +6,7 @@ export type PaymentEvent = {
     created_at: string;
     endpoint: string;
     asset_name?: string | null;
+    category?: string | null;
     payer: string;
     seller?: string | null;
     seller_address?: string | null;

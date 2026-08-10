@@ -40,7 +40,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
         asset.price,
         `/api/assets/${id}/content`,
         asset.seller_address as `0x${string}` | undefined,
-        { asset_name: asset.name },
+        { asset_name: asset.name, category: asset.category },
     );
 
     return gatedHandler(req);
