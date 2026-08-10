@@ -73,6 +73,7 @@ export function withGateway(
     price: string,
     endpoint: string,
     payTo?: `0x${string}`,
+    metadata?: { asset_name?: string },
 ) {
     const requirements = buildPaymentRequirements(price, payTo);
 
@@ -152,6 +153,7 @@ export function withGateway(
             const { error } = await supabase.from("payment_events").insert({
                 id: crypto.randomUUID(),
                 endpoint,
+                asset_name: metadata?.asset_name ?? null,
                 payer,
                 seller_address: requirements.payTo,
                 amount_usdc: amountUsdc,

@@ -179,7 +179,8 @@ function TransactionsContent() {
             header: "Asset / Endpoint",
             className: "min-w-0",
             cell: (ev) => {
-                const fallbackName = ev.endpoint.split("/").pop() || "Unlocked Asset";
+                const slugMatch = ev.endpoint.match(/\/assets\/([^/]+)/);
+                const fallbackName = slugMatch?.[1]?.replace(/-/g, " ") || "Unlocked Asset";
                 const displayName = ev.asset_name || fallbackName;
                 return (
                     <div className="flex flex-col justify-center">
